@@ -1,0 +1,41 @@
+{
+  "name": "git-notes",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "webpack-dev-server --mode development --open --hot --host 0.0.0.0",
+    "build": "npm run clean && webpack --mode production",
+    "clean": "rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fawind/git-notes.git"
+  },
+  "author": "Fabian Windheuser, mail@fabian.me",
+  "bugs": {
+    "url": "https://github.com/fawind/git-notes/issues"
+  },
+  "homepage": "https://github.com/fawind/git-notes#readme",
+  "dependencies": {
+    "@isomorphic-git/lightning-fs": "^3.4.0",
+    "isomorphic-git": "^0.70.6",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "react-router-dom": "^5.1.2"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.4",
+    "@types/react-router-dom": "^5.1.2",
+    "awesome-typescript-loader": "^5.2.1",
+    "css-loader": "^3.2.0",
+    "file-loader": "^4.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^1.0.0",
+    "tslint": "^5.20.1",
+    "tslint-react": "^4.1.0",
+    "typescript": "^3.7.2",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  }
+}
