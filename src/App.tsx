@@ -4,10 +4,12 @@ import * as ReactDOM from 'react-dom';
 import {HashRouter, Route} from 'react-router-dom';
 
 import 'main.css';
-import {cloneRepo, initFS} from '@src/git';
+import {FileService} from '@src/storage/fileService';
 
-initFS();
-cloneRepo();
+
+const fs = new FileService();
+console.log(fs);
+fs.listRoot().then(r => console.log(r));
 
 const root: React.FunctionComponent<{}> = (): ReactElement => {
   return (
