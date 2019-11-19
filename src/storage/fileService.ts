@@ -1,20 +1,18 @@
 import * as FS from '@isomorphic-git/lightning-fs';
 import * as git from 'isomorphic-git';
 
-export enum FileType {
-  File = 0,
-  Directory = 1,
+export const enum FileType {
+  File = 'FILE',
+  Directory = 'DIRECTORY',
 }
 
 export class File {
   public readonly path: string;
-  public readonly name: string;
   public readonly type: FileType;
 
   constructor(path: string, type: FileType) {
     this.path = path;
     this.type = type;
-    this.name = File.getFilename(path);
   }
 
   isFile(): boolean {
@@ -23,14 +21,6 @@ export class File {
 
   isDirectory(): boolean {
     return this.type === FileType.Directory;
-  }
-
-  private static getFilename(filePath: string) {
-    const parts = filePath.split('/');
-    if (parts.length <= 1) {
-      return filePath;
-    }
-    return parts[parts.length - 1];
   }
 }
 

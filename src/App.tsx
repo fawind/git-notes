@@ -8,7 +8,7 @@ import {FileService} from '@src/storage/fileService';
 
 
 const fs = new FileService();
-console.log(fs);
+console.log('FileService', fs);
 fs.listRoot().then(r => console.log(r));
 
 const root: React.FunctionComponent<{}> = (): ReactElement => {
