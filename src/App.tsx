@@ -1,28 +1,24 @@
 import * as React from 'react';
-import {ReactElement} from 'react';
 import * as ReactDOM from 'react-dom';
 import {HashRouter, Route} from 'react-router-dom';
+import {Provider} from 'mobx-react';
 
 import 'main.css';
-import {FileService} from '@src/storage/fileService';
+import {FileService} from '@src/services/fileService';
+import {FileStore} from '@src/store/fileStore';
+import {FileTree} from '@src/components/fileTree';
 
 
-const fs = new FileService();
-console.log('FileService', fs);
-fs.listRoot().then(r => console.log(r));
-
-const root: React.FunctionComponent<{}> = (): ReactElement => {
-  return (
-      <h1>
-        Hello Git-Notes!
-      </h1>
-  );
-};
+const fileService = new FileService();
+const fileStore = new FileStore(fileService);
+fileStore.init();
 
 const app: React.ReactElement<any> = (
-    <HashRouter>
-      <Route exact={true} path={'/'} component={root}/>
-    </HashRouter>
+    <Provider store={fileStore}>
+      <HashRouter>
+        <Route exact={true} path={'/'} component={FileTree}/>
+      </HashRouter>
+    </Provider>
 );
 
 ReactDOM.render(app, document.getElementById('app'));

@@ -18,6 +18,8 @@
   "dependencies": {
     "@isomorphic-git/lightning-fs": "^3.4.0",
     "isomorphic-git": "^0.70.6",
+    "mobx": "^5.15.0",
+    "mobx-react": "^6.1.4",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.1.2"

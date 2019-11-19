@@ -1,33 +1,12 @@
 import * as FS from '@isomorphic-git/lightning-fs';
 import * as git from 'isomorphic-git';
+import {FileEntry, FileType} from '@src/store/types';
 
-export const enum FileType {
-  File = 'FILE',
-  Directory = 'DIRECTORY',
-}
-
-export class File {
-  public readonly path: string;
-  public readonly type: FileType;
-
-  constructor(path: string, type: FileType) {
-    this.path = path;
-    this.type = type;
-  }
-
-  isFile(): boolean {
-    return this.type === FileType.File;
-  }
-
-  isDirectory(): boolean {
-    return this.type === FileType.Directory;
-  }
-}
 
 export class FileService {
   private static readonly FS_NAME = 'git-fs';
   private static readonly GIT_FS_KEY = 'fs';
-  private static readonly ROOT_DIR: File = new File('/', FileType.Directory);
+  private static readonly ROOT_DIR: FileEntry = new FileEntry('/', FileType.Directory);
   private static readonly ENCODING = 'utf8';
 
   private readonly fs: any;
@@ -39,11 +18,11 @@ export class FileService {
     git.plugins.set(FileService.GIT_FS_KEY, this.fs);
   }
 
-  async listRoot(): Promise<File[]> {
+  async listRoot(): Promise<FileEntry[]> {
     return this.listDir(FileService.ROOT_DIR);
   }
 
-  async listDir(dir: File): Promise<File[]> {
+  async listDir(dir: FileEntry): Promise<FileEntry[]> {
     const files = await this.pfs.readdir(dir.path);
     return Promise.all(files.map(f => this.getFileInfo(f)));
   }
@@ -52,7 +31,7 @@ export class FileService {
     await this.pfs.mkdir(dirname);
   }
 
-  async removeDir(dir: File) {
+  async removeDir(dir: FileEntry) {
     if (!dir.isDirectory()) {
       throw new Error(`Path ${dir.path} is not a directory`);
     }
@@ -63,22 +42,22 @@ export class FileService {
     return this.pfs.writeFile(path, content, {encoding: FileService.ENCODING});
   }
 
-  async removeFile(file: File) {
+  async removeFile(file: FileEntry) {
     if (!file.isFile()) {
       throw new Error(`Path ${file.path} is not a file`);
     }
     await this.pfs.unlink(file.path);
   }
 
-  async readFile(file: File): Promise<String> {
+  async readFile(file: FileEntry): Promise<String> {
     if (!file.isFile()) {
       throw new Error(`Path ${file.path} is not a file`);
     }
     return this.pfs.readFile(file.path, {encoding: FileService.ENCODING});
   }
 
-  private async getFileInfo(filePath: string): Promise<File> {
+  private async getFileInfo(filePath: string): Promise<FileEntry> {
     const stat = await this.pfs.stat(`/${filePath}`);
-    return new File(filePath, stat.type === 'file' ? FileType.File : FileType.Directory);
+    return new FileEntry(filePath, stat.type === 'file' ? FileType.File : FileType.Directory);
   }
 }
