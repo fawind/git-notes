@@ -53,7 +53,7 @@ export class FileService {
     await this.pfs.unlink(file.path);
   }
 
-  async readFile(file: FileEntry): Promise<String> {
+  async readFile(file: FileEntry): Promise<string> {
     if (!file.isFile()) {
       throw new Error(`Path ${file.path} is not a file`);
     }

@@ -12,11 +12,10 @@ export class FileTreeItem {
     this.file = file;
     this.canExpand = file.isDirectory();
   }
+}
 
-  @computed get name(): string {
-    const parts = this.file.path.split('/');
-    const name = parts.length <= 1 ? this.file.path : parts[parts.length - 1];
-    return this.file.isFile() ? name : name + '/';
+export class OpenFile {
+  constructor(readonly file: FileEntry, readonly content: string) {
   }
 }
 
@@ -24,6 +23,7 @@ export class FileStore {
   private readonly fileService: FileService;
   private readonly rootDir: FileEntry;
   @observable private _fileTree: FileTreeItem[] = [];
+  @observable private _currentFile: OpenFile | null = null;
 
   constructor(fileService: FileService) {
     this.fileService = fileService;
@@ -43,6 +43,11 @@ export class FileStore {
     return this._fileTree;
   }
 
+  @computed
+  get currentFile(): OpenFile | null {
+    return this._currentFile;
+  }
+
   @action.bound
   async toggleDir(item: FileTreeItem) {
     FileStore.assertDirectory(item);
@@ -51,6 +56,13 @@ export class FileStore {
     } else {
       await this.expandDir(item);
     }
+  }
+
+  @action.bound
+  async openFile(item: FileTreeItem) {
+    FileStore.assertFile(item);
+    const content = await this.fileService.readFile(item.file);
+    runInAction(() => this._currentFile = new OpenFile(item.file, content));
   }
 
   @action.bound

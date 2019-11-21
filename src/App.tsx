@@ -6,7 +6,7 @@ import {Provider} from 'mobx-react';
 import 'main.css';
 import {FileService} from '@src/services/fileService';
 import {FileStore} from '@src/store/fileStore';
-import {FileBrowser} from '@src/components/fileBrowser';
+import {EditorApp} from '@src/components/EditorApp';
 import {GitService} from '@src/services/gitService';
 
 
@@ -18,9 +18,9 @@ fileStore.init();
     // .then(() => console.log('Finished cloning'));
 
 const app: React.ReactElement<any> = (
-    <Provider store={fileStore}>
+    <Provider fileStore={fileStore}>
       <HashRouter>
-        <Route exact={true} path={'/'} component={FileBrowser}/>
+        <Route exact={true} path={'/'} component={EditorApp}/>
       </HashRouter>
     </Provider>
 );
