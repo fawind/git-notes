@@ -9,15 +9,20 @@ export class FileService {
   private static readonly ROOT_DIR = new FileEntry(FileService.ROOT_PATH, FileType.Directory);
   private static readonly ENCODING = 'utf8';
 
-  private readonly fs: typeof FS;
-  private readonly pfs: PromiseFS;
+  private fs: typeof FS;
+  private pfs: PromiseFS;
 
-  constructor(fsName: string = FileService.FS_NAME) {
-    this.fs = new FS(fsName);
+  constructor() {
+    this.fs = new FS(FileService.FS_NAME);
     this.pfs = this.fs.promises;
     // For debugging
     (<any>window).fs = this.fs;
     (<any>window).pfs = this.pfs;
+  }
+
+  wipeFs() {
+    this.fs = new FS(FileService.FS_NAME, {wipe: true});
+    this.pfs = this.fs.promises;
   }
 
   async listRoot(): Promise<FileEntry[]> {
@@ -71,7 +76,7 @@ export class FileService {
     return FileService.ROOT_DIR;
   }
 
-  getFSInstance(): any {
+  getFSInstance(): typeof FS {
     return this.fs;
   }
 
