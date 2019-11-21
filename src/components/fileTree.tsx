@@ -12,7 +12,14 @@ export const FileTree: React.FunctionComponent<Props> = inject('store')(observer
   const files = props.store.rootFiles;
   return (
       <ul>
-        {files.map((file, i) => (<li key={i}>{file.path}</li>))}
+        {files.map((file) => (
+            <li
+                key={file.path}
+                onClick={() => props.store.expandDir(file)}
+            >
+              {file.path}
+            </li>
+        ))}
       </ul>
   );
 }));
