@@ -7,6 +7,7 @@ export class SettingsStore {
   @observable url: string | null = null;
   @observable user: string | null = null;
   @observable token: string | null = null;
+  @observable showHidden: false;
 
   constructor() {
     this.load();
