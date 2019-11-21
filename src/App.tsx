@@ -6,7 +6,7 @@ import {Provider} from 'mobx-react';
 import 'main.css';
 import {FileService} from '@src/services/fileService';
 import {FileStore} from '@src/store/fileStore';
-import {FileTree} from '@src/components/fileTree';
+import {FileBrowser} from '@src/components/fileBrowser';
 import {GitService} from '@src/services/gitService';
 
 
@@ -20,7 +20,7 @@ fileStore.init();
 const app: React.ReactElement<any> = (
     <Provider store={fileStore}>
       <HashRouter>
-        <Route exact={true} path={'/'} component={FileTree}/>
+        <Route exact={true} path={'/'} component={FileBrowser}/>
       </HashRouter>
     </Provider>
 );
