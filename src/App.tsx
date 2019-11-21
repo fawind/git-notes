@@ -8,10 +8,10 @@ import {FileService} from '@src/services/fileService';
 import {FileStore} from '@src/store/fileStore';
 import {EditorApp} from '@src/components/editor/EditorApp';
 import {GitService} from '@src/services/gitService';
-import {RepoStore} from '@src/store/repoStore';
+import {SettingsStore} from '@src/store/settingsStore';
 import {Landing} from '@src/components/landing/Landing';
 
-const repoStore = new RepoStore();
+const settingsStore = new SettingsStore();
 const fileService = new FileService();
 const gitService = new GitService(fileService);
 const fileStore = new FileStore(fileService);
@@ -20,7 +20,7 @@ fileStore.init();
 const app: React.ReactElement<any> = (
     <Provider
         fileStore={fileStore}
-        repoStore={repoStore}
+        settingsStore={settingsStore}
         gitService={gitService}
     >
       <HashRouter>

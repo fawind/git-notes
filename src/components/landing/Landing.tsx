@@ -1,36 +1,39 @@
 import * as React from 'react';
 import {ChangeEvent, ReactElement} from 'react';
 import {inject, observer} from 'mobx-react';
-import {RepoStore} from '@src/store/repoStore';
+import {SettingsStore} from '@src/store/settingsStore';
 import {FileStore} from '@src/store/fileStore';
 import {GitService} from '@src/services/gitService';
 
 type Props = {
-  readonly repoStore: RepoStore;
+  readonly settingsStore: SettingsStore;
   readonly fileStore: FileStore;
   readonly gitService: GitService;
 }
 
-export const Landing: React.FunctionComponent<Props> = inject('repoStore', 'fileStore', 'gitService')
+export const Landing: React.FunctionComponent<Props> = inject('settingsStore', 'fileStore', 'gitService')
 (observer((props: Props): ReactElement => {
-  const onUrlChange = (e: ChangeEvent<HTMLInputElement>) => props.repoStore.url = e.target.value;
-  const onUserChange = (e: ChangeEvent<HTMLInputElement>) => props.repoStore.user = e.target.value;
-  const onTokenChange = (e: ChangeEvent<HTMLInputElement>) => props.repoStore.token = e.target.value;
+  const onUrlChange = (e: ChangeEvent<HTMLInputElement>) => props.settingsStore.url = e.target.value;
+  const onUserChange = (e: ChangeEvent<HTMLInputElement>) => props.settingsStore.user = e.target.value;
+  const onTokenChange = (e: ChangeEvent<HTMLInputElement>) => props.settingsStore.token = e.target.value;
   const onClone = () => {
-    if (props.repoStore.url && props.repoStore.user && props.repoStore.token) {
-      props.gitService.clone(props.repoStore.url, props.repoStore.user, props.repoStore.token);
+    if (props.settingsStore.url && props.settingsStore.user && props.settingsStore.token) {
+      props.settingsStore.save();
+      props.gitService.clone(props.settingsStore.url, props.settingsStore.user, props.settingsStore.token);
     }
   };
   return (
       <div>
         <div>
-          Url: <input type="text" value={props.repoStore.url || ''} onChange={onUrlChange}/>
+          Url: <input type="text" value={props.settingsStore.url || ''} onChange={onUrlChange}/>
         </div>
         <div>
-          Username: <input type="text" value={props.repoStore.user || ''} onChange={onUserChange}/>
+          Username: <input type="text" value={props.settingsStore.user || ''}
+                           onChange={onUserChange}/>
         </div>
         <div>
-          Token: <input type="text" value={props.repoStore.token || ''} onChange={onTokenChange}/>
+          Token: <input type="text" value={props.settingsStore.token || ''}
+                        onChange={onTokenChange}/>
         </div>
         <button onClick={onClone}>Clone</button>
       </div>
