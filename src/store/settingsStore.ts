@@ -3,6 +3,7 @@ import {observable, set, toJS} from 'mobx';
 const STORE_KEY = 'settings';
 
 export class SettingsStore {
+  @observable hasRepo = false;
   @observable url: string | null = null;
   @observable user: string | null = null;
   @observable token: string | null = null;

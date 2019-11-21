@@ -1,14 +1,15 @@
 import * as React from 'react';
 import {ChangeEvent, ReactElement} from 'react';
 import {inject, observer} from 'mobx-react';
+import {RouteComponentProps} from 'react-router';
 import {SettingsStore} from '@src/store/settingsStore';
 import {FileStore} from '@src/store/fileStore';
 import {GitService} from '@src/services/gitService';
 
-type Props = {
-  readonly settingsStore: SettingsStore;
-  readonly fileStore: FileStore;
-  readonly gitService: GitService;
+interface Props extends RouteComponentProps {
+  readonly settingsStore: SettingsStore,
+  readonly fileStore: FileStore,
+  readonly gitService: GitService,
 }
 
 export const Landing: React.FunctionComponent<Props> = inject('settingsStore', 'fileStore', 'gitService')
@@ -18,8 +19,12 @@ export const Landing: React.FunctionComponent<Props> = inject('settingsStore', '
   const onTokenChange = (e: ChangeEvent<HTMLInputElement>) => props.settingsStore.token = e.target.value;
   const onClone = () => {
     if (props.settingsStore.url && props.settingsStore.user && props.settingsStore.token) {
-      props.settingsStore.save();
-      props.gitService.clone(props.settingsStore.url, props.settingsStore.user, props.settingsStore.token);
+      props.gitService.clone(props.settingsStore.url, props.settingsStore.user, props.settingsStore.token)
+          .then(() => {
+            props.settingsStore.hasRepo = true;
+            props.settingsStore.save();
+            props.history.push('/');
+          });
     }
   };
   return (

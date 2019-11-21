@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {HashRouter, Route} from 'react-router-dom';
+import {HashRouter, Redirect, Route} from 'react-router-dom';
 import {Provider} from 'mobx-react';
 
 import 'main.css';
@@ -24,8 +24,10 @@ const app: React.ReactElement<any> = (
         gitService={gitService}
     >
       <HashRouter>
-        <Route exact={true} path={'/'} component={EditorApp}/>
-        <Route exact={true} path={'/landing'} component={Landing}/>
+        {settingsStore.hasRepo
+            ? <Route exact={true} path={'/'} component={EditorApp}/>
+            : <Redirect to={'/landing'}/>}
+        <Route exact={true} path={'/landing'} component={Landing} active={true}/>
       </HashRouter>
     </Provider>
 );
