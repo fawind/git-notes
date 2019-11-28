@@ -4,7 +4,6 @@ import {FileEntry, FileType} from '@src/store/types';
 
 export class FileService {
   private static readonly FS_NAME = 'git-fs';
-
   private static readonly ROOT_PATH = '/';
   private static readonly ROOT_DIR = new FileEntry(FileService.ROOT_PATH, FileType.Directory);
   private static readonly ENCODING = 'utf8';
@@ -13,16 +12,21 @@ export class FileService {
   private pfs: PromiseFS;
 
   constructor() {
-    this.fs = new FS(FileService.FS_NAME);
+    this.initFs(false);
+  }
+
+  private initFs(wipe: boolean) {
+    this.fs = new FS(FileService.FS_NAME, {wipe});
     this.pfs = this.fs.promises;
     // For debugging
     (<any>window).fs = this.fs;
     (<any>window).pfs = this.pfs;
   }
 
-  wipeFs() {
-    this.fs = new FS(FileService.FS_NAME, {wipe: true});
-    this.pfs = this.fs.promises;
+  async wipeFs() {
+    this.initFs(true);
+    // TODO(fawind): Fix race condition when resetting the FS when cloning a new repo
+    return new Promise(resolve => setTimeout(() => resolve(), 1000));
   }
 
   async listRoot(): Promise<FileEntry[]> {

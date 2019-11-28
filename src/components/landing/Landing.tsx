@@ -23,7 +23,7 @@ export const Landing: React.FunctionComponent<Props> = inject('settingsStore', '
           .then(() => {
             props.settingsStore.hasRepo = true;
             props.settingsStore.save();
-            props.history.push('/');
+            props.fileStore.init().then(() => props.history.push('/'));
           });
     }
   };

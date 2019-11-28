@@ -14,9 +14,13 @@ export class GitService {
     this.fileService = fileService;
     this.rootDir = rootDir;
     git.plugins.set(GitService.GIT_FS_KEY, this.fileService.getFSInstance());
+    // For debugging
+    (<any>window).git = git;
   }
 
   async clone(url: string, username: string, token: string) {
+    console.log('Clearing FS...');
+    await this.fileService.wipeFs();
     console.log(`Cloning repo "${url}"...`);
     await git.clone({
       dir: this.rootDir.path,
