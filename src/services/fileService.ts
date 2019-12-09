@@ -45,9 +45,7 @@ export class FileService {
   }
 
   async removeDir(dir: FileEntry) {
-    if (!dir.isDirectory()) {
-      throw new Error(`Path ${dir.path} is not a directory`);
-    }
+    FileService.assertDirectory(dir);
     await this.pfs.rmdir(dir.path);
   }
 
@@ -56,25 +54,15 @@ export class FileService {
   }
 
   async removeFile(file: FileEntry) {
-    if (!file.isFile()) {
-      throw new Error(`Path ${file.path} is not a file`);
-    }
+    FileService.assertFile(file);
     await this.pfs.unlink(file.path);
   }
 
   async readFile(file: FileEntry): Promise<string> {
-    if (!file.isFile()) {
-      throw new Error(`Path ${file.path} is not a file`);
-    }
+    FileService.assertFile(file);
     return this.pfs.readFile(file.path, {encoding: FileService.ENCODING});
   }
 
-  static joinPath(base: string, file: string): string {
-    if (base === '/') {
-      return `/${file}`;
-    }
-    return `${base}/${file}`;
-  }
 
   static getRootDir(): FileEntry {
     return FileService.ROOT_DIR;
@@ -82,6 +70,25 @@ export class FileService {
 
   getFSInstance(): typeof FS {
     return this.fs;
+  }
+
+  static assertDirectory(file: FileEntry) {
+    if (!file.isDirectory()) {
+      throw new Error(`Entry ${file.path} is not a directory`);
+    }
+  }
+
+  static assertFile(file: FileEntry) {
+    if (!file.isFile()) {
+      throw new Error(`Item ${file.path} is not a file`);
+    }
+  }
+
+  private static joinPath(base: string, file: string): string {
+    if (base === '/') {
+      return `/${file}`;
+    }
+    return `${base}/${file}`;
   }
 
   private async getFileInfo(filePath: string): Promise<FileEntry> {

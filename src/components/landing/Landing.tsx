@@ -3,16 +3,16 @@ import {ChangeEvent, ReactElement} from 'react';
 import {inject, observer} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
 import {SettingsStore} from '@src/store/settingsStore';
-import {FileStore} from '@src/store/fileStore';
+import {FileTreeStore} from '@src/store/fileTreeStore';
 import {GitService} from '@src/services/gitService';
 
 interface Props extends RouteComponentProps {
   readonly settingsStore: SettingsStore,
-  readonly fileStore: FileStore,
+  readonly fileTreeStore: FileTreeStore,
   readonly gitService: GitService,
 }
 
-export const Landing: React.FunctionComponent<Props> = inject('settingsStore', 'fileStore', 'gitService')
+export const Landing: React.FunctionComponent<Props> = inject('settingsStore', 'fileTreeStore', 'gitService')
 (observer((props: Props): ReactElement => {
   const onUrlChange = (e: ChangeEvent<HTMLInputElement>) => props.settingsStore.url = e.target.value;
   const onUserChange = (e: ChangeEvent<HTMLInputElement>) => props.settingsStore.user = e.target.value;
@@ -23,7 +23,7 @@ export const Landing: React.FunctionComponent<Props> = inject('settingsStore', '
           .then(() => {
             props.settingsStore.hasRepo = true;
             props.settingsStore.save();
-            props.fileStore.init().then(() => props.history.push('/'));
+            props.fileTreeStore.init().then(() => props.history.push('/'));
           });
     }
   };

@@ -5,22 +5,26 @@ import {Provider} from 'mobx-react';
 
 import 'main.css';
 import {FileService} from '@src/services/fileService';
-import {FileStore} from '@src/store/fileStore';
+import {FileTreeStore} from '@src/store/fileTreeStore';
 import {EditorApp} from '@src/components/editor/EditorApp';
 import {GitService} from '@src/services/gitService';
 import {SettingsStore} from '@src/store/settingsStore';
 import {Landing} from '@src/components/landing/Landing';
+import {FileEditStore} from '@src/store/fileEditStore';
 
 const settingsStore = new SettingsStore();
 const fileService = new FileService();
 const gitService = new GitService(fileService);
-const fileStore = new FileStore(fileService);
-fileStore.init();
+const fileTreeStore = new FileTreeStore(fileService);
+const fileEditStore = new FileEditStore(fileService, gitService);
+
+fileTreeStore.init();
 
 const app: React.ReactElement<any> = (
     <Provider
-        fileStore={fileStore}
+        fileTreeStore={fileTreeStore}
         settingsStore={settingsStore}
+        fileEditStore={fileEditStore}
         gitService={gitService}
     >
       <HashRouter>

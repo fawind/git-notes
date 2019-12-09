@@ -14,16 +14,10 @@ export class FileTreeItem {
   }
 }
 
-export class OpenFile {
-  constructor(readonly file: FileEntry, readonly content: string) {
-  }
-}
-
-export class FileStore {
+export class FileTreeStore {
   private readonly fileService: FileService;
   private readonly rootDir: FileEntry;
   @observable private _fileTree: FileTreeItem[] = [];
-  @observable private _currentFile: OpenFile | null = null;
 
   constructor(fileService: FileService) {
     this.fileService = fileService;
@@ -34,7 +28,7 @@ export class FileStore {
   async init() {
     const files: FileEntry[] = await this.fileService.listRoot();
     runInAction(() => {
-      this._fileTree = FileStore.toFileTree(files);
+      this._fileTree = FileTreeStore.toFileTree(files);
     });
   }
 
@@ -43,26 +37,14 @@ export class FileStore {
     return this._fileTree;
   }
 
-  @computed
-  get currentFile(): OpenFile | null {
-    return this._currentFile;
-  }
-
   @action.bound
   async toggleDir(item: FileTreeItem) {
-    FileStore.assertDirectory(item);
+    FileService.assertDirectory(item.file);
     if (item.isExpanded) {
       this.collapseDir(item);
     } else {
       await this.expandDir(item);
     }
-  }
-
-  @action.bound
-  async openFile(item: FileTreeItem) {
-    FileStore.assertFile(item);
-    const content = await this.fileService.readFile(item.file);
-    runInAction(() => this._currentFile = new OpenFile(item.file, content));
   }
 
   @action.bound
@@ -72,7 +54,7 @@ export class FileStore {
     } else {
       const children = await this.fileService.listDir(item.file);
       runInAction(() => {
-        set(item, {isExpanded: true, children: FileStore.toFileTree(children)});
+        set(item, {isExpanded: true, children: FileTreeStore.toFileTree(children)});
       });
     }
   }
@@ -84,17 +66,5 @@ export class FileStore {
 
   private static toFileTree(files: FileEntry[]): FileTreeItem[] {
     return files.map(file => new FileTreeItem(file));
-  }
-
-  private static assertDirectory(item: FileTreeItem) {
-    if (!item.file.isDirectory()) {
-      throw new Error(`Entry ${item.file.path} is not a directory`);
-    }
-  }
-
-  private static assertFile(item: FileTreeItem) {
-    if (!item.file.isFile()) {
-      throw new Error(`Item ${item.file.path} is not a file`);
-    }
   }
 }

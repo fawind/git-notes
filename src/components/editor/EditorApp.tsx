@@ -1,16 +1,16 @@
 import * as React from 'react';
 import {ReactElement} from 'react';
 import {inject, observer} from 'mobx-react';
-import {FileStore} from '@src/store/fileStore';
+import {FileTreeStore} from '@src/store/fileTreeStore';
 import {FileTree} from '@src/components/editor/FileTree';
 import {FileEditor} from '@src/components/editor/FileEditor';
 
 
 type Props = {
-  readonly fileStore: FileStore;
+  readonly fileTreeStore: FileTreeStore;
 }
 
-export const EditorApp: React.FunctionComponent<Props> = inject('fileStore')(observer((props: Props): ReactElement => {
+export const EditorApp: React.FunctionComponent<Props> = inject('fileTreeStore')(observer((props: Props): ReactElement => {
   return (
       <div className="container">
         <div className="side-bar">
