@@ -17,12 +17,14 @@
   "homepage": "https://github.com/fawind/git-notes#readme",
   "dependencies": {
     "@isomorphic-git/lightning-fs": "^3.4.0",
+    "immutable": "^4.0.0-rc.12",
     "isomorphic-git": "^0.70.6",
     "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
-    "react-router-dom": "^5.1.2"
+    "react-router-dom": "^5.1.2",
+    "rich-markdown-editor": "^9.11.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.11",

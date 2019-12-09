@@ -2,8 +2,8 @@ import * as React from 'react';
 import {ReactElement} from 'react';
 import {inject, observer} from 'mobx-react';
 import {FileTreeStore} from '@src/store/fileTreeStore';
-import {FileTree} from '@src/components/editor/FileTree';
-import {FileEditor} from '@src/components/editor/FileEditor';
+import {FileTree} from '@src/components/notes/FileTree';
+import {FileEditor} from '@src/components/notes/editor/FileEditor';
 
 
 type Props = {

@@ -6,7 +6,7 @@ import {Provider} from 'mobx-react';
 import 'main.css';
 import {FileService} from '@src/services/fileService';
 import {FileTreeStore} from '@src/store/fileTreeStore';
-import {EditorApp} from '@src/components/editor/EditorApp';
+import {EditorApp} from '@src/components/notes/EditorApp';
 import {GitService} from '@src/services/gitService';
 import {SettingsStore} from '@src/store/settingsStore';
 import {Landing} from '@src/components/landing/Landing';
