@@ -8,16 +8,19 @@ type Props = {
 }
 
 export const FileEditor: React.FunctionComponent<Props> = inject('fileEditStore')(observer((props: Props): ReactElement => {
-  if (props.fileEditStore!.currentFile === null) {
+  if (props.fileEditStore!.file === null) {
     return <div/>;
   }
+  const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    props.fileEditStore!.onChange(event.target.value);
+  };
   return (
       <div style={{height: '100%'}}>
-        <div><b>{props.fileEditStore!.currentFile.file.name}</b></div>
+        <div><b>{props.fileEditStore!.file.name}</b></div>
         <textarea
             className="editor"
-            readOnly={true}
-            value={props.fileEditStore!.currentFile.content}
+            onChange={onChange}
+            value={props.fileEditStore!.content}
         />
       </div>
   );

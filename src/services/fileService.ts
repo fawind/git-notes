@@ -63,6 +63,10 @@ export class FileService {
     return this.pfs.readFile(file.path, {encoding: FileService.ENCODING});
   }
 
+  async writeFile(file: FileEntry, content: string): Promise<void> {
+    FileService.assertFile(file);
+    await this.pfs.writeFile(file.path, content, {encoding: FileService.ENCODING});
+  }
 
   static getRootDir(): FileEntry {
     return FileService.ROOT_DIR;
