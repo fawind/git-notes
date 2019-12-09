@@ -2,7 +2,7 @@ import * as React from 'react';
 import {ReactElement} from 'react';
 import {inject, observer} from 'mobx-react';
 import {FileTreeStore} from '@src/store/fileTreeStore';
-import {FileTree} from '@src/components/notes/FileTree';
+import {FileTree} from '@src/components/notes/fileTree/FileTree';
 import {FileEditor} from '@src/components/notes/editor/FileEditor';
 
 

@@ -33,7 +33,7 @@ html, body {
 .side-bar {
   flex: 0 0 auto;
   position: relative;
-  width: 300px;
+  width: 240px;
   background-color: var(--bgLight);
   overflow: scroll;
 }
