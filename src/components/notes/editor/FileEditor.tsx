@@ -3,12 +3,16 @@ import {ReactElement} from 'react';
 import {inject, observer} from 'mobx-react';
 import {FileEditStore} from '@src/store/fileEditStore';
 import Editor from 'rich-markdown-editor';
+import {getEditorTheme} from '@src/components/notes/editor/editorTheme';
+import {SettingsStore} from '@src/store/settingsStore';
 
 type Props = {
   readonly fileEditStore?: FileEditStore;
+  readonly settingsStore?: SettingsStore;
 }
 
-export const FileEditor: React.FunctionComponent<Props> = inject('fileEditStore')(observer((props: Props): ReactElement => {
+export const FileEditor: React.FunctionComponent<Props> = inject('fileEditStore', 'settingsStore')
+(observer((props: Props): ReactElement => {
   if (props.fileEditStore!.currentFile === null) {
     return <div/>;
   }
@@ -27,6 +31,7 @@ export const FileEditor: React.FunctionComponent<Props> = inject('fileEditStore'
             onChange={onChange}
             autoFocus={true}
             placeholder={'Start writing...'}
+            theme={getEditorTheme(props.settingsStore!.theme)}
         />
       </div>
   );
