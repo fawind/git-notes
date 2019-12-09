@@ -1,0 +1,32 @@
+.editor {
+}
+
+.editor-toolbar {
+  height: 45px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.editor-toolbar .path-divider {
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+.editor-content {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-left: var(--editorPadding);
+  padding-right: var(--editorPadding);
+  overflow: scroll;
+}
+
+/* HACK: Hide block insert popup from 'rich-markdown-editor' */
+div[class^="BlockInsert_"] {
+  display: none;
+}

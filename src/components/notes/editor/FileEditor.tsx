@@ -1,10 +1,12 @@
 import * as React from 'react';
 import {ReactElement} from 'react';
 import {inject, observer} from 'mobx-react';
+
+import './editor.css';
 import {FileEditStore} from '@src/store/fileEditStore';
-import Editor from 'rich-markdown-editor';
-import {getEditorTheme} from '@src/components/notes/editor/editorTheme';
 import {SettingsStore} from '@src/store/settingsStore';
+import {EditorContent} from '@src/components/notes/editor/EditorContent';
+import {EditorToolbar} from '@src/components/notes/editor/EditorToolbar';
 
 type Props = {
   readonly fileEditStore?: FileEditStore;
@@ -16,23 +18,10 @@ export const FileEditor: React.FunctionComponent<Props> = inject('fileEditStore'
   if (props.fileEditStore!.currentFile === null) {
     return <div/>;
   }
-  const onChange = (getValue: () => string) => {
-    if (props.fileEditStore!.currentFile !== null) {
-      props.fileEditStore!.onChange(props.fileEditStore!.currentFile.file, getValue);
-    }
-  };
   return (
-      <div style={{height: '100%'}}>
-        <div><b>{props.fileEditStore!.currentFile.file.name}</b></div>
-        <Editor
-            key={props.fileEditStore!.currentFile.file.path}
-            id={props.fileEditStore!.currentFile.file.path}
-            defaultValue={props.fileEditStore!.currentFile.content}
-            onChange={onChange}
-            autoFocus={true}
-            placeholder={'Start writing...'}
-            theme={getEditorTheme(props.settingsStore!.theme)}
-        />
+      <div className="editor">
+        <EditorToolbar/>
+        <EditorContent/>
       </div>
   );
 }));

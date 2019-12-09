@@ -8,6 +8,7 @@
   --fgLight: #a3abb3;
   --primary: #DD4C4F;
   --link: #0366d6;
+  --editorPadding: 10%;
 }
 
 html, body {
@@ -40,14 +41,4 @@ html, body {
 .main-panel {
   flex: 1 1 0;
   position: relative;
-}
-
-.editor {
-  width: 100%;
-  height: 100%;
-}
-
-/* HACK: Hide block insert popup from 'rich-markdown-editor' */
-div[class^="BlockInsert_"] {
-  display: none;
 }
