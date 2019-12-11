@@ -28,3 +28,5 @@ export class FileEntry {
     return isFile ? name : name + '/';
   }
 }
+
+export const ROOT_DIR = new FileEntry('/', FileType.Directory);

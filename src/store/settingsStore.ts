@@ -1,4 +1,5 @@
 import {observable, set, toJS} from 'mobx';
+import {injectable} from 'inversify';
 
 const STORE_KEY = 'settings';
 
@@ -11,6 +12,7 @@ export type AppTheme = {
   link: string;
 };
 
+@injectable()
 export class SettingsStore {
   // Repo settings
   @observable hasRepo = false;

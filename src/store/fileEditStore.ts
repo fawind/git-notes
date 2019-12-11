@@ -2,12 +2,14 @@ import {action, computed, observable, runInAction} from 'mobx';
 import {FileEntry} from '@src/store/types';
 import {FileService} from '@src/services/fileService';
 import {GitService} from '@src/services/gitService';
+import {inject, injectable} from 'inversify';
 
 export class OpenFile {
   constructor(readonly file: FileEntry, readonly content: string) {
   }
 }
 
+@injectable()
 export class FileEditStore {
   private static WRITE_TIMEOUT: number = 400;
   private readonly fileService: FileService;
@@ -15,7 +17,9 @@ export class FileEditStore {
   @observable private _currentFile: OpenFile | null = null;
   @observable private _saveTimeout: number = -1;
 
-  constructor(fileService: FileService, gitService: GitService) {
+  constructor(
+      @inject(FileService) fileService: FileService,
+      @inject(GitService) gitService: GitService) {
     this.fileService = fileService;
     this.gitService = gitService;
   }

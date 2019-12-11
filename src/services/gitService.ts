@@ -1,7 +1,10 @@
 import * as git from 'isomorphic-git';
-import {FileEntry, FileType} from '@src/store/types';
+import {FileEntry} from '@src/store/types';
 import {FileService} from '@src/services/fileService';
+import {inject, injectable, named} from 'inversify';
+import {appSymbols} from '@src/appModule';
 
+@injectable()
 export class GitService {
   private static readonly GIT_FS_KEY = 'fs';
   private readonly fileService: FileService;
@@ -9,8 +12,8 @@ export class GitService {
   private rootDir: FileEntry;
 
   constructor(
-      fileService: FileService,
-      rootDir: FileEntry = new FileEntry('/', FileType.Directory)) {
+      @inject(FileService) fileService: FileService,
+      @inject(appSymbols.ROOT_DIR) rootDir: FileEntry) {
     this.fileService = fileService;
     this.rootDir = rootDir;
     git.plugins.set(GitService.GIT_FS_KEY, this.fileService.getFSInstance());

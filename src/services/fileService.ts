@@ -1,7 +1,8 @@
 import * as FS from '@isomorphic-git/lightning-fs';
 import {FileEntry, FileType} from '@src/store/types';
+import {injectable} from 'inversify';
 
-
+@injectable()
 export class FileService {
   private static readonly FS_NAME = 'git-fs';
   private static readonly ROOT_PATH = '/';

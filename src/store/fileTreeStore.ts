@@ -1,6 +1,7 @@
 import {action, computed, observable, runInAction, set} from 'mobx';
 import {FileEntry} from '@src/store/types';
 import {FileService} from '@src/services/fileService';
+import {inject, injectable} from 'inversify';
 
 export class FileTreeItem {
   readonly file: FileEntry;
@@ -14,12 +15,13 @@ export class FileTreeItem {
   }
 }
 
+@injectable()
 export class FileTreeStore {
   private readonly fileService: FileService;
   private readonly rootDir: FileEntry;
   @observable private _fileTree: FileTreeItem[] = [];
 
-  constructor(fileService: FileService) {
+  constructor(@inject(FileService) fileService: FileService) {
     this.fileService = fileService;
     this.rootDir = FileService.getRootDir();
   }

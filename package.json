@@ -18,15 +18,19 @@
   "dependencies": {
     "@isomorphic-git/lightning-fs": "^3.4.0",
     "immutable": "^4.0.0-rc.12",
+    "inversify": "^5.0.1",
+    "inversify-inject-decorators": "^3.1.0",
     "isomorphic-git": "^0.70.6",
     "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.1.2",
+    "reflect-metadata": "^0.1.13",
     "rich-markdown-editor": "^9.11.0"
   },
   "devDependencies": {
+    "@types/node": "^12.12.17",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.4",
     "@types/react-router-dom": "^5.1.2",

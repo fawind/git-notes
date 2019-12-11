@@ -1,34 +1,40 @@
 import * as React from 'react';
-import {ReactElement} from 'react';
-import {inject, observer} from 'mobx-react';
-import {FileEditStore} from '@src/store/fileEditStore';
 import Editor from 'rich-markdown-editor';
 import {getEditorTheme} from '@src/components/notes/editor/editorTheme';
+import {FileEditStore} from '@src/store/fileEditStore';
 import {SettingsStore} from '@src/store/settingsStore';
+import {inject} from '@src/appModule';
+import {observer} from 'mobx-react';
 
-type Props = {
-  readonly fileEditStore?: FileEditStore;
-  readonly settingsStore?: SettingsStore;
-}
+@observer
+export class EditorContent extends React.PureComponent<{}> {
+  @inject(FileEditStore) private fileEditStore: FileEditStore;
+  @inject(SettingsStore) private settingsStore: SettingsStore;
 
-export const EditorContent: React.FunctionComponent<Props> = inject('fileEditStore', 'settingsStore')
-(observer((props: Props): ReactElement => {
-  const onChange = (getValue: () => string) => {
-    if (props.fileEditStore!.currentFile !== null) {
-      props.fileEditStore!.onChange(props.fileEditStore!.currentFile.file, getValue);
+  constructor(props: any) {
+    super(props);
+    this.onEditorChange = this.onEditorChange.bind(this);
+  }
+
+  private onEditorChange(getValue: () => string) {
+    if (this.fileEditStore.currentFile) {
+      this.fileEditStore.onChange(this.fileEditStore.currentFile.file, getValue);
     }
-  };
-  return (
-      <div className="editor-content">
-        <Editor
-            key={props.fileEditStore!.currentFile!.file.path}
-            id={props.fileEditStore!.currentFile!.file.path}
-            defaultValue={props.fileEditStore!.currentFile!.content}
-            onChange={onChange}
-            autoFocus={true}
-            placeholder={'Start writing...'}
-            theme={getEditorTheme(props.settingsStore!.theme)}
-        />
-      </div>
-  );
-}));
+  }
+
+  render() {
+    return (
+        <div className="editor-content">
+          <Editor
+              key={this.fileEditStore.currentFile!.file.path}
+              id={this.fileEditStore.currentFile!.file.path}
+              defaultValue={this.fileEditStore.currentFile!.content}
+              onChange={this.onEditorChange}
+              autoFocus={true}
+              placeholder={'Start writing...'}
+              theme={getEditorTheme(this.settingsStore.theme)}
+          />
+        </div>
+    );
+  }
+}

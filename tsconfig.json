@@ -11,7 +11,12 @@
       "es2017",
       "dom"
     ],
+    "types": [
+      "reflect-metadata",
+      "node"
+    ],
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "removeComments": true,
     "allowSyntheticDefaultImports": false,
     "jsx": "react",
