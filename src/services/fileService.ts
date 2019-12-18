@@ -6,7 +6,7 @@ import {injectable} from 'inversify';
 export class FileService {
   private static readonly FS_NAME = 'git-fs';
   private static readonly ROOT_PATH = '/';
-  private static readonly ROOT_DIR = new FileEntry(FileService.ROOT_PATH, FileType.Directory);
+  private static readonly ROOT_DIR = FileEntry.dir(FileService.ROOT_PATH);
   private static readonly ENCODING = 'utf8';
 
   private fs: typeof FS;

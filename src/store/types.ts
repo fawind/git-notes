@@ -3,13 +3,28 @@ export const enum FileType {
   Directory = 'DIRECTORY',
 }
 
+export const getPath = (path: string): string => {
+  if (path.length > 0 && path[0] === '/') {
+    return path;
+  }
+  return '/' + path;
+};
+
 export class FileEntry {
   public readonly path: string;
   public readonly type: FileType;
   public readonly name: string;
 
+  static file(path: string): FileEntry {
+    return new FileEntry(path, FileType.File);
+  }
+
+  static dir(path: string): FileEntry {
+    return new FileEntry(path, FileType.Directory);
+  }
+
   constructor(path: string, type: FileType) {
-    this.path = path;
+    this.path = getPath(path);
     this.type = type;
     this.name = FileEntry.getName(path, this.type === FileType.File);
   }
@@ -29,4 +44,4 @@ export class FileEntry {
   }
 }
 
-export const ROOT_DIR = new FileEntry('/', FileType.Directory);
+export const ROOT_DIR = FileEntry.dir('/');

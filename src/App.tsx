@@ -9,10 +9,13 @@ import {EditorApp} from '@src/components/notes/EditorApp';
 import {Landing} from '@src/components/landing/Landing';
 import {appContainer} from '@src/appModule';
 import {SettingsStore} from '@src/store/settingsStore';
+import {FileStatusStore} from '@src/store/fileStatusStore';
 
 const fileTreeStore = appContainer.get<FileTreeStore>(FileTreeStore);
 const settingsStore = appContainer.get<SettingsStore>(SettingsStore);
+const fileStatusStore = appContainer.get<FileStatusStore>(FileStatusStore);
 fileTreeStore.init();
+fileStatusStore.updateModifiedFiles();
 
 const app: React.ReactElement<any> = (
     <HashRouter>

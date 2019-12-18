@@ -19,6 +19,10 @@ html, body {
   font-family: 'Nunito', sans-serif;
 }
 
+.primary {
+  color: var(--primary);
+}
+
 .container {
   display: flex;
   flex: 1 1 0;

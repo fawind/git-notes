@@ -1,7 +1,7 @@
 import * as git from 'isomorphic-git';
 import {FileEntry} from '@src/store/types';
 import {FileService} from '@src/services/fileService';
-import {inject, injectable, named} from 'inversify';
+import {inject, injectable} from 'inversify';
 import {appSymbols} from '@src/appModule';
 
 @injectable()
@@ -19,6 +19,7 @@ export class GitService {
     git.plugins.set(GitService.GIT_FS_KEY, this.fileService.getFSInstance());
     // For debugging
     (<any>window).git = git;
+    (<any>window).gitService = this;
   }
 
   async clone(url: string, username: string, token: string) {
@@ -35,5 +36,13 @@ export class GitService {
       url,
     });
     console.log('Finished cloning.');
+  }
+
+  async getModifiedFiles(): Promise<FileEntry[]> {
+    const status = await git.statusMatrix({dir: this.rootDir.path});
+    const FILE = 0, HEAD = 1, WORKDIR = 2;
+    return status
+        .filter(row => row[HEAD] !== row[WORKDIR])
+        .map(row => FileEntry.file(row[FILE]));
   }
 }

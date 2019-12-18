@@ -6,6 +6,8 @@ import {SettingsStore} from '@src/store/settingsStore';
 import {FileEditStore} from '@src/store/fileEditStore';
 import {inject} from '@src/appModule';
 import {observer} from 'mobx-react';
+import {FileEntry} from '@src/store/types';
+import {FileStatusStore} from '@src/store/fileStatusStore';
 
 type Props = {
   readonly entries?: FileTreeItem[];
@@ -18,10 +20,19 @@ type ItemProps = {
 @observer
 class TreeItemFile extends React.PureComponent<ItemProps> {
   @inject(FileEditStore) private fileEditStore: FileEditStore;
+  @inject(FileStatusStore) private fileStatusStore: FileStatusStore;
 
   constructor(props: ItemProps) {
     super(props);
     this.onClick = this.onClick.bind(this);
+    this.getFileName = this.getFileName.bind(this);
+  }
+
+  private getFileName(file: FileEntry): JSX.Element {
+    if (this.fileStatusStore.isModified(file)) {
+      return <span>{file.name}<span className="primary">*</span></span>;
+    }
+    return <span>{file.name}</span>;
   }
 
   private onClick() {
@@ -31,7 +42,7 @@ class TreeItemFile extends React.PureComponent<ItemProps> {
   render() {
     return (
         <li key={this.props.item.file.path}>
-          <div onClick={this.onClick}>{this.props.item.file.name}</div>
+          <div onClick={this.onClick}>{this.getFileName(this.props.item.file)}</div>
         </li>
     );
   }
