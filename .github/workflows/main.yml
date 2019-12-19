@@ -22,3 +22,4 @@ jobs:
         BASE_BRANCH: master
         BRANCH: gh-pages
         FOLDER: dist
+        CLEAN: true
