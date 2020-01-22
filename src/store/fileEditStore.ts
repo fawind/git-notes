@@ -38,6 +38,18 @@ export class FileEditStore {
   }
 
   @action.bound
+  async pushFile() {
+    this.assertCurrentFile();
+    await this.gitService.pushFile(this._currentFile!.file);
+  }
+
+  @action.bound
+  async revertFile() {
+    this.assertCurrentFile();
+    await this.gitService.checkoutFile(this._currentFile!.file);
+  }
+
+  @action.bound
   onChange(file: FileEntry, getContent: () => string) {
     if (this._saveTimeout !== -1) {
       window.clearTimeout(this._saveTimeout);
@@ -49,5 +61,11 @@ export class FileEditStore {
         console.log('Content saved to FS', file);
       }
     }, FileEditStore.WRITE_TIMEOUT);
+  }
+
+  private assertCurrentFile() {
+    if (!this._currentFile) {
+      throw new Error('No current file selected');
+    }
   }
 }

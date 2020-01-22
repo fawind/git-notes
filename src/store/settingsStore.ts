@@ -19,6 +19,9 @@ export class SettingsStore {
   @observable url: string | null = null;
   @observable user: string | null = null;
   @observable token: string | null = null;
+  @observable branch: string = 'master';
+  @observable email: string = 'windheuser.fabian@gmail.com';
+  @observable commitMessage: string = 'GitNotes Auto Save';
   // FileTree settings
   @observable showHidden: false;
   // Theme settings

@@ -2,12 +2,13 @@ import * as React from 'react';
 import {FileEditStore} from '@src/store/fileEditStore';
 import {inject} from '@src/appModule';
 import {observer} from 'mobx-react';
+import {EditorToolbarOptions} from '@src/components/notes/editor/EditorToolbarOptions';
 
 @observer
 export class EditorToolbar extends React.PureComponent<{}> {
   @inject(FileEditStore) private fileEditStore: FileEditStore;
 
-  private getLocationElements(path: string): JSX.Element[] {
+  private getFileLocation(path: string): JSX.Element[] {
     const elements: JSX.Element[] = [];
     const parts = path.split('/');
     parts.forEach((part, i) => {
@@ -24,10 +25,10 @@ export class EditorToolbar extends React.PureComponent<{}> {
     return (
         <div className="editor-toolbar">
           <div>
-            {this.getLocationElements(this.fileEditStore.currentFile!.file.path)}
+            {this.getFileLocation(this.fileEditStore.currentFile!.file.path)}
           </div>
           <div>
-            Settings
+            <EditorToolbarOptions/>
           </div>
         </div>
     );
