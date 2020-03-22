@@ -20,8 +20,8 @@ export class FileService {
     this.fs = new FS(FileService.FS_NAME, {wipe});
     this.pfs = this.fs.promises;
     // For debugging
-    (<any>window).fs = this.fs;
-    (<any>window).pfs = this.pfs;
+    (window as any).fs = this.fs;
+    (window as any).pfs = this.pfs;
   }
 
   async wipeFs() {

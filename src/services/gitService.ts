@@ -1,30 +1,34 @@
 import * as git from 'isomorphic-git';
-import {PushResponse} from 'isomorphic-git';
+// tslint:disable-next-line:no-submodule-imports
+import * as http from 'isomorphic-git/http/web';
 import {FileEntry} from '@src/store/types';
 import {FileService} from '@src/services/fileService';
 import {inject, injectable} from 'inversify';
 import {appSymbols} from '@src/appModule';
 import {SettingsStore} from '@src/store/settingsStore';
+import {PushResult} from 'isomorphic-git';
 
 @injectable()
 export class GitService {
   private static readonly GIT_FS_KEY = 'fs';
   private readonly fileService: FileService;
+  private readonly fs: any;
   private readonly settingsStore: SettingsStore;
   private corsProxy = 'https://cors.isomorphic-git.org';
   private rootDir: FileEntry;
 
   constructor(
-      @inject(FileService) fileService: FileService,
-      @inject(SettingsStore) settingsStore: SettingsStore,
-      @inject(appSymbols.ROOT_DIR) rootDir: FileEntry) {
+    @inject(FileService) fileService: FileService,
+    @inject(SettingsStore) settingsStore: SettingsStore,
+    @inject(appSymbols.ROOT_DIR) rootDir: FileEntry) {
     this.fileService = fileService;
+    this.fs = fileService.getFSInstance();
     this.settingsStore = settingsStore;
     this.rootDir = rootDir;
-    git.plugins.set(GitService.GIT_FS_KEY, this.fileService.getFSInstance());
     // For debugging
-    (<any>window).git = git;
-    (<any>window).gitService = this;
+    (window as any).git = git;
+    (window as any).http = http;
+    (window as any).gitService = this;
   }
 
   async clone(url: string, username: string, token: string) {
@@ -32,30 +36,32 @@ export class GitService {
     await this.fileService.wipeFs();
     console.log(`Cloning repo "${url}"...`);
     await git.clone({
+      fs: this.fileService.getFSInstance(),
+      http: http,
       dir: this.rootDir.path,
       corsProxy: this.corsProxy,
       singleBranch: true,
       depth: 1,
-      username,
-      token,
       url,
+      onAuth: () => ({username, password: token}),
     });
     console.log('Finished cloning.');
   }
 
   async getModifiedFiles(): Promise<FileEntry[]> {
-    const status = await git.statusMatrix({dir: this.rootDir.path});
+    const status = await git.statusMatrix({fs: this.fs, dir: this.rootDir.path});
     const FILE = 0, HEAD = 1, WORKDIR = 2;
     return status
-        .filter(row => row[HEAD] !== row[WORKDIR])
-        .map(row => FileEntry.file(row[FILE]));
+      .filter(row => row[HEAD] !== row[WORKDIR])
+      .map(row => FileEntry.file(row[FILE]));
   }
 
   async checkoutFile(file: FileEntry): Promise<void> {
     await git.checkout({
+      fs: this.fs,
       dir: this.rootDir.path,
       ref: this.settingsStore.branch,
-      pattern: this.getPath(file),
+      filepaths: [this.getPath(file)],
     });
   }
 
@@ -66,8 +72,9 @@ export class GitService {
     if (!this.settingsStore.user) {
       throw new Error('No user name set');
     }
-    await git.add({dir: this.rootDir.path, filepath: this.getPath(file)});
+    await git.add({fs: this.fs, dir: this.rootDir.path, filepath: this.getPath(file)});
     await git.commit({
+      fs: this.fs,
       dir: this.rootDir.path,
       author: {
         name: this.settingsStore.user,
@@ -75,18 +82,17 @@ export class GitService {
       },
       message: this.settingsStore.commitMessage,
     });
-    const response: PushResponse = await git.push({
+    const response: PushResult = await git.push({
+      fs: this.fs,
+      http,
       dir: '/',
       remote: 'origin',
       ref: 'master',
-      oauth2format: 'github',
       corsProxy: this.corsProxy,
-      token: this.settingsStore.token,
-      force: true,
+      onAuth: () => ({username: this.settingsStore.user, password: this.settingsStore.token}),
     });
-    console.log('Response:', response);
-    if (response.errors && response.errors.length > 0) {
-      throw new Error(`Error pushing changes: ${response.errors.join('.\n')}`);
+    if (response.error) {
+      throw new Error(`Error pushing changes: ${response.error}`);
     }
   }
 
