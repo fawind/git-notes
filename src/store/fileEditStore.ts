@@ -3,6 +3,7 @@ import {FileEntry} from '@src/store/types';
 import {FileService} from '@src/services/fileService';
 import {GitService} from '@src/services/gitService';
 import {inject, injectable} from 'inversify';
+import {FileStatusStore} from '@src/store/fileStatusStore';
 
 export class OpenFile {
   constructor(readonly file: FileEntry, readonly content: string) {
@@ -14,14 +15,17 @@ export class FileEditStore {
   private static WRITE_TIMEOUT: number = 400;
   private readonly fileService: FileService;
   private readonly gitService: GitService;
+  private readonly fileStatusStore: FileStatusStore;
   @observable private _currentFile: OpenFile | null = null;
   @observable private _saveTimeout: number = -1;
 
   constructor(
-      @inject(FileService) fileService: FileService,
-      @inject(GitService) gitService: GitService) {
+    @inject(FileService) fileService: FileService,
+    @inject(GitService) gitService: GitService,
+    @inject(FileStatusStore) fileStatusStore: FileStatusStore) {
     this.fileService = fileService;
     this.gitService = gitService;
+    this.fileStatusStore = fileStatusStore;
   }
 
   @computed
@@ -50,6 +54,11 @@ export class FileEditStore {
   }
 
   @action.bound
+  async pullFiles() {
+    await this.gitService.pull();
+  }
+
+  @action.bound
   onChange(file: FileEntry, getContent: () => string) {
     if (this._saveTimeout !== -1) {
       window.clearTimeout(this._saveTimeout);
@@ -59,6 +68,7 @@ export class FileEditStore {
       if (this._currentFile && this._currentFile.content !== content) {
         this.fileService.writeFile(file, content);
         console.log('Content saved to FS', file);
+        this.fileStatusStore.updateModifiedFiles();
       }
     }, FileEditStore.WRITE_TIMEOUT);
   }

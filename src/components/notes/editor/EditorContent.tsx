@@ -24,17 +24,17 @@ export class EditorContent extends React.PureComponent<{}> {
 
   render() {
     return (
-        <div className="editor-content">
-          <Editor
-              key={this.fileEditStore.currentFile!.file.path}
-              id={this.fileEditStore.currentFile!.file.path}
-              defaultValue={this.fileEditStore.currentFile!.content}
-              onChange={this.onEditorChange}
-              autoFocus={true}
-              placeholder={'Start writing...'}
-              theme={getEditorTheme(this.settingsStore.theme)}
-          />
-        </div>
+      <div className="editor-content">
+        <Editor
+          key={this.fileEditStore.currentFile!.file.path}
+          id={this.fileEditStore.currentFile!.file.path}
+          defaultValue={this.fileEditStore.currentFile!.content}
+          onChange={this.onEditorChange}
+          autoFocus={true}
+          placeholder={'Start writing...'}
+          theme={getEditorTheme(this.settingsStore.theme)}
+        />
+      </div>
     );
   }
 }

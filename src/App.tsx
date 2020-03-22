@@ -17,13 +17,13 @@ const fileStatusStore = appContainer.get<FileStatusStore>(FileStatusStore);
 fileTreeStore.init();
 fileStatusStore.updateModifiedFiles();
 
-const app: React.ReactElement<any> = (
-    <HashRouter>
-      {settingsStore.hasRepo
-          ? <Route exact={true} path={'/'} component={EditorApp}/>
-          : <Redirect to={'/landing'}/>}
-      <Route exact={true} path={'/landing'} component={Landing} active={true}/>
-    </HashRouter>
+const app: React.ReactElement = (
+  <HashRouter>
+    {settingsStore.hasRepo
+      ? <Route exact={true} path={'/'} component={EditorApp}/>
+      : <Redirect to={'/landing'}/>}
+    <Route exact={true} path={'/landing'} component={Landing} active={true}/>
+  </HashRouter>
 );
 
 ReactDOM.render(app, document.getElementById('app'));

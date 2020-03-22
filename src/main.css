@@ -2,47 +2,47 @@
 
 /* Theme defined in <AppTheme> */
 :root {
-  --bg: #fbfbfb;
-  --bgLight: #f4f5f4;
-  --fg: #444;
-  --fgLight: #a3abb3;
-  --primary: #DD4C4F;
-  --link: #0366d6;
-  --editorPadding: 10%;
+    --bg: #fbfbfb;
+    --bgLight: #f4f5f4;
+    --fg: #444;
+    --fgLight: #a3abb3;
+    --primary: #DD4C4F;
+    --link: #0366d6;
+    --editorPadding: 10%;
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
-  color: var(--fg);
-  background-color: var(--bg);
-  font-family: 'Nunito', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--fg);
+    background-color: var(--bg);
+    font-family: 'Nunito', sans-serif;
 }
 
 .primary {
-  color: var(--primary);
+    color: var(--primary);
 }
 
 .container {
-  display: flex;
-  flex: 1 1 0;
-  flex-direction: row;
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: row;
 
-  position: absolute;
-  height: 100%;
-  left: 0;
-  right: 0;
+    position: absolute;
+    height: 100%;
+    left: 0;
+    right: 0;
 }
 
 .side-bar {
-  flex: 0 0 auto;
-  position: relative;
-  width: 240px;
-  background-color: var(--bgLight);
-  overflow: scroll;
+    flex: 0 0 auto;
+    position: relative;
+    width: 240px;
+    background-color: var(--bgLight);
+    overflow: scroll;
 }
 
 .main-panel {
-  flex: 1 1 0;
-  position: relative;
+    flex: 1 1 0;
+    position: relative;
 }

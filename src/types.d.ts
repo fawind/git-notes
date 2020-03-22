@@ -39,16 +39,16 @@ declare module 'rich-markdown-editor' {
   };
 
   export type Block =
-      | 'heading1'
-      | 'heading2'
-      | 'heading3'
-      | 'block-quote'
-      | 'code'
-      | 'horizontal-rule'
-      | 'bulleted-list'
-      | 'ordered-list'
-      | 'todo-list'
-      | 'image';
+    | 'heading1'
+    | 'heading2'
+    | 'heading3'
+    | 'block-quote'
+    | 'code'
+    | 'horizontal-rule'
+    | 'bulleted-list'
+    | 'ordered-list'
+    | 'todo-list'
+    | 'image';
 
   export type Mark = 'bold' | 'italic' | 'deleted' | 'code' | 'link';
 
@@ -107,7 +107,7 @@ declare module 'rich-markdown-editor' {
     autoFocus?: boolean;
     spellCheck?: boolean;
     toc?: boolean;
-    plugins?: Object[]
+    plugins?: object[]
     theme?: Theme;
     dark?: boolean;
     tooltip?: React.Component;
@@ -123,7 +123,7 @@ declare module 'rich-markdown-editor' {
     onClickLink?: (href: string) => void;
     onClickHashTag?: (tag: string) => void;
     getLinkComponent?: (node: any) => React.Component | undefined;
-  }
+  };
 
   export default class Editor extends React.Component<Props, any> {
   }

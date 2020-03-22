@@ -20,37 +20,36 @@ export class Landing extends React.PureComponent<RouteComponentProps> {
   constructor(props: RouteComponentProps) {
     super(props);
     this.onClone = this.onClone.bind(this);
-
   }
 
   private onClone() {
     if (this.settingsStore.url && this.settingsStore.user && this.settingsStore.token) {
-      this.gitService.clone(this.settingsStore.url, this.settingsStore.user, this.settingsStore.token)
-          .then(() => {
-            this.settingsStore.hasRepo = true;
-            this.settingsStore.save();
-            this.fileTreeStore.init().then(() => this.props.history.push('/'));
-          });
+      this.gitService.clone()
+        .then(() => {
+          this.settingsStore.hasRepo = true;
+          this.settingsStore.save();
+          this.fileTreeStore.init().then(() => this.props.history.push('/'));
+        });
     }
   }
 
   render() {
     return (
+      <div>
         <div>
-          <div>
-            Url: <input type="text" value={this.settingsStore.url || ''}
-                        onChange={this.onUrlChange}/>
-          </div>
-          <div>
-            Username: <input type="text" value={this.settingsStore.user || ''}
-                             onChange={this.onUserChange}/>
-          </div>
-          <div>
-            Token: <input type="text" value={this.settingsStore.token || ''}
-                          onChange={this.onTokenChange}/>
-          </div>
-          <button onClick={this.onClone}>Clone</button>
+          Url: <input type="text" value={this.settingsStore.url || ''}
+                      onChange={this.onUrlChange}/>
         </div>
+        <div>
+          Username: <input type="text" value={this.settingsStore.user || ''}
+                           onChange={this.onUserChange}/>
+        </div>
+        <div>
+          Token: <input type="text" value={this.settingsStore.token || ''}
+                        onChange={this.onTokenChange}/>
+        </div>
+        <button onClick={this.onClone}>Clone</button>
+      </div>
     );
   }
 }

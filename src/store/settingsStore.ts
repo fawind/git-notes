@@ -20,7 +20,7 @@ export class SettingsStore {
   @observable user: string | null = null;
   @observable token: string | null = null;
   @observable branch: string = 'master';
-  @observable email: string = 'windheuser.fabian@gmail.com';
+  @observable email: string = '';
   @observable commitMessage: string = 'GitNotes Auto Save';
   // FileTree settings
   @observable showHidden: false;

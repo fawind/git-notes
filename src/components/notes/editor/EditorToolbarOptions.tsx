@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 
 type State = {
   dropdownVisible: boolean;
-}
+};
 
 @observer
 export class EditorToolbarOptions extends React.Component<{}, State> {
@@ -13,7 +13,7 @@ export class EditorToolbarOptions extends React.Component<{}, State> {
 
   constructor(props: {}) {
     super(props);
-    this.state = {dropdownVisible: true};
+    this.state = {dropdownVisible: false};
     this.toggleDropdown = this.toggleDropdown.bind(this);
     this.onCommit = this.onCommit.bind(this);
     this.onRevert = this.onRevert.bind(this);
@@ -31,28 +31,34 @@ export class EditorToolbarOptions extends React.Component<{}, State> {
     this.fileEditStore.revertFile();
   }
 
+  onPull() {
+    this.fileEditStore.pullFiles();
+  }
+
   renderDropdown(): JSX.Element {
     if (!this.state.dropdownVisible) {
       return <div/>;
     }
     return (
-        <div>
-          <div className="file-settings-dropdown">
-            <div className="option" onClick={this.onCommit}>Commit and Push</div>
-            <hr/>
-            <div className="option" onClick={this.onRevert}>Revert Changes</div>
-          </div>
-          <div className="file-settings-dropdown-overlay" onClick={this.toggleDropdown}/>
+      <div>
+        <div className="file-settings-dropdown">
+          <div className="option" onClick={this.onCommit}>Commit and Push</div>
+          <hr/>
+          <div className="option" onClick={this.onRevert}>Revert Changes</div>
+          <hr/>
+          <div className="option" onClick={this.onPull}>Pull</div>
         </div>
+        <div className="file-settings-dropdown-overlay" onClick={this.toggleDropdown}/>
+      </div>
     );
   }
 
   render() {
     return (
-        <div>
-          <div className="file-settings-button" onClick={this.toggleDropdown}>{'•••'}</div>
-          {this.renderDropdown()}
-        </div>
+      <div>
+        <div className="file-settings-button" onClick={this.toggleDropdown}>{'•••'}</div>
+        {this.renderDropdown()}
+      </div>
     );
   }
 }

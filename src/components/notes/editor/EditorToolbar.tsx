@@ -12,7 +12,9 @@ export class EditorToolbar extends React.PureComponent<{}> {
     const elements: JSX.Element[] = [];
     const parts = path.split('/');
     parts.forEach((part, i) => {
-      if (part === '') return;
+      if (part === '') {
+        return;
+      }
       elements.push(<span key={i}>{part}</span>);
       if (i < parts.length - 1) {
         elements.push(<span key={`${i}-div`} className="path-divider">›</span>);
@@ -23,14 +25,14 @@ export class EditorToolbar extends React.PureComponent<{}> {
 
   render() {
     return (
-        <div className="editor-toolbar">
-          <div>
-            {this.getFileLocation(this.fileEditStore.currentFile!.file.path)}
-          </div>
-          <div>
-            <EditorToolbarOptions/>
-          </div>
+      <div className="editor-toolbar">
+        <div>
+          {this.getFileLocation(this.fileEditStore.currentFile!.file.path)}
         </div>
+        <div>
+          <EditorToolbarOptions/>
+        </div>
+      </div>
     );
   }
 }

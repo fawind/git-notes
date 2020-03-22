@@ -1,65 +1,65 @@
 .editor-toolbar {
-  height: 45px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 12px;
-  padding-right: 12px;
+    height: 45px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 12px;
+    padding-right: 12px;
 }
 
 .editor-toolbar .path-divider {
-  margin-left: 6px;
-  margin-right: 6px;
+    margin-left: 6px;
+    margin-right: 6px;
 }
 
 .editor-content {
-  position: absolute;
-  top: 45px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding-left: var(--editorPadding);
-  padding-right: var(--editorPadding);
-  overflow: scroll;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-left: var(--editorPadding);
+    padding-right: var(--editorPadding);
+    overflow: scroll;
 }
 
 /* HACK: Hide block insert popup from 'rich-markdown-editor' */
 div[class^="BlockInsert_"] {
-  display: none;
+    display: none;
 }
 
 .file-settings-button {
-  cursor: pointer;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-radius: 5px;
+    cursor: pointer;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px;
 }
 
 .file-settings-button:hover {
-  background-color: var(--fgLight);
+    background-color: var(--fgLight);
 }
 
 .file-settings-dropdown-overlay {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  opacity: 100%;
-  z-index: 4;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    opacity: 100%;
+    z-index: 4;
 }
 
 .file-settings-dropdown {
-  position: absolute;
-  top: 45px;
-  right: 5px;
-  background-color: var(--bgLight);
-  border-radius: 5px;
-  padding: 20px;
-  box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.3);
-  z-index: 5;
+    position: absolute;
+    top: 45px;
+    right: 5px;
+    background-color: var(--bgLight);
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.3);
+    z-index: 5;
 }
 
 .file-settings-dropdown .option {
-  cursor: pointer;
+    cursor: pointer;
 }

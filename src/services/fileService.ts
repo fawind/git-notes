@@ -37,8 +37,8 @@ export class FileService {
   async listDir(dir: FileEntry): Promise<FileEntry[]> {
     const files = await this.pfs.readdir(dir.path);
     return Promise.all(files
-        .map(f => FileService.joinPath(dir.path, f))
-        .map(f => this.getFileInfo(f)));
+      .map(f => FileService.joinPath(dir.path, f))
+      .map(f => this.getFileInfo(f)));
   }
 
   async addDir(dirname: string) {

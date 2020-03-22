@@ -11,7 +11,7 @@ import {FileStatusStore} from '@src/store/fileStatusStore';
 
 type Props = {
   readonly entries?: FileTreeItem[];
-}
+};
 
 type ItemProps = {
   readonly item: FileTreeItem;
@@ -41,9 +41,9 @@ class TreeItemFile extends React.PureComponent<ItemProps> {
 
   render() {
     return (
-        <li key={this.props.item.file.path}>
-          <div onClick={this.onClick}>{this.getFileName(this.props.item.file)}</div>
-        </li>
+      <li key={this.props.item.file.path}>
+        <div onClick={this.onClick}>{this.getFileName(this.props.item.file)}</div>
+      </li>
     );
   }
 }
@@ -64,13 +64,13 @@ class TreeItemDir extends React.PureComponent<ItemProps> {
   render() {
     const expandedIcon = this.props.item.isExpanded ? '▾' : '▸';
     return (
-        <li key={this.props.item.file.path}>
-          <div onClick={this.onClick}>
-            {expandedIcon} {this.props.item.file.name}
-          </div>
-          {this.props.item.isExpanded && this.props.item.children !== null ?
-              <FileTree entries={this.props.item.children}/> : <div/>}
-        </li>
+      <li key={this.props.item.file.path}>
+        <div onClick={this.onClick}>
+          {expandedIcon} {this.props.item.file.name}
+        </div>
+        {this.props.item.isExpanded && this.props.item.children !== null ?
+          <FileTree entries={this.props.item.children}/> : <div/>}
+      </li>
     );
   }
 }
@@ -98,7 +98,7 @@ export class FileTree extends React.PureComponent<Props> {
       return <TreeItemDir key={entry.file.path} item={entry}/>;
     });
     return (
-        <ul className="file-tree">{fileTree}</ul>
+      <ul className="file-tree">{fileTree}</ul>
     );
   }
 }

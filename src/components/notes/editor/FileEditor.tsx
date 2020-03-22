@@ -16,10 +16,10 @@ export class FileEditor extends React.PureComponent<{}> {
       return <div/>;
     }
     return (
-        <div className="editor">
-          <EditorToolbar/>
-          <EditorContent/>
-        </div>
+      <div className="editor">
+        <EditorToolbar/>
+        <EditorContent/>
+      </div>
     );
   }
 }

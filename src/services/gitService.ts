@@ -1,4 +1,5 @@
 import * as git from 'isomorphic-git';
+import {PushResult} from 'isomorphic-git';
 // tslint:disable-next-line:no-submodule-imports
 import * as http from 'isomorphic-git/http/web';
 import {FileEntry} from '@src/store/types';
@@ -6,11 +7,9 @@ import {FileService} from '@src/services/fileService';
 import {inject, injectable} from 'inversify';
 import {appSymbols} from '@src/appModule';
 import {SettingsStore} from '@src/store/settingsStore';
-import {PushResult} from 'isomorphic-git';
 
 @injectable()
 export class GitService {
-  private static readonly GIT_FS_KEY = 'fs';
   private readonly fileService: FileService;
   private readonly fs: any;
   private readonly settingsStore: SettingsStore;
@@ -31,10 +30,10 @@ export class GitService {
     (window as any).gitService = this;
   }
 
-  async clone(url: string, username: string, token: string) {
+  async clone() {
     console.log('Clearing FS...');
     await this.fileService.wipeFs();
-    console.log(`Cloning repo "${url}"...`);
+    console.log(`Cloning repo "${this.settingsStore.url}"...`);
     await git.clone({
       fs: this.fileService.getFSInstance(),
       http: http,
@@ -42,8 +41,8 @@ export class GitService {
       corsProxy: this.corsProxy,
       singleBranch: true,
       depth: 1,
-      url,
-      onAuth: () => ({username, password: token}),
+      url: this.settingsStore.url!,
+      onAuth: () => this.getAuth(),
     });
     console.log('Finished cloning.');
   }
@@ -66,18 +65,12 @@ export class GitService {
   }
 
   async pushFile(file: FileEntry): Promise<void> {
-    if (!this.settingsStore.token) {
-      throw new Error('No git token set');
-    }
-    if (!this.settingsStore.user) {
-      throw new Error('No user name set');
-    }
     await git.add({fs: this.fs, dir: this.rootDir.path, filepath: this.getPath(file)});
     await git.commit({
       fs: this.fs,
       dir: this.rootDir.path,
       author: {
-        name: this.settingsStore.user,
+        name: this.settingsStore.user!,
         email: this.settingsStore.email,
       },
       message: this.settingsStore.commitMessage,
@@ -86,14 +79,22 @@ export class GitService {
       fs: this.fs,
       http,
       dir: '/',
-      remote: 'origin',
-      ref: 'master',
       corsProxy: this.corsProxy,
-      onAuth: () => ({username: this.settingsStore.user, password: this.settingsStore.token}),
+      onAuth: () => this.getAuth(),
     });
     if (response.error) {
       throw new Error(`Error pushing changes: ${response.error}`);
     }
+  }
+
+  async pull(): Promise<void> {
+    await git.pull({
+      fs: this.fs,
+      http,
+      dir: '/',
+      corsProxy: this.corsProxy,
+      onAuth: () => this.getAuth(),
+    });
   }
 
   private getPath(file: FileEntry): string {
@@ -101,5 +102,15 @@ export class GitService {
       return file.path.substr(1);
     }
     return file.path;
+  }
+
+  private getAuth(): { username: string, password?: string } {
+    if (!this.settingsStore.user) {
+      throw new Error('No user name set');
+    }
+    if (!this.settingsStore.token) {
+      return {username: this.settingsStore.user};
+    }
+    return {username: this.settingsStore.user, password: this.settingsStore.token};
   }
 }
