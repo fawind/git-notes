@@ -22,9 +22,7 @@ export class FileService {
   static async listDir(dir: FileEntry): Promise<FileEntry[]> {
     const files = await FileSystem.get().readdir(dir.path);
     return Promise.all(
-      files
-        .map((f) => FileService.joinPath(dir.path, f))
-        .map((f) => FileService.getFileInfo(f))
+      files.map((f) => FileService.joinPath(dir.path, f)).map((f) => FileService.getFileInfo(f))
     );
   }
 
@@ -91,5 +89,21 @@ export class FileService {
       path,
       type: stat.type === "file" ? FileType.FILE : FileType.DIRECTORY,
     };
+  }
+}
+
+export class FilePathUtils {
+  static getFileName(path: string): string {
+    const parts = path.split("/");
+    return parts[parts.length - 1];
+  }
+
+  static getParentDir(path: string): string {
+    const parts = path.split("/");
+    if (parts.length <= 1) {
+      return "/";
+    }
+    parts.pop();
+    return parts.join("/");
   }
 }

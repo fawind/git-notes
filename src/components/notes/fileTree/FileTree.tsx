@@ -6,9 +6,11 @@ import { AppState } from "@src/store/appState";
 import { getFileTreeChildren, getFileTreeRoot } from "@src/store/selectors/fileTreeSelectors";
 import { InitFileTree, ReadFile, ToggleFileTreeDir } from "@src/store/thunks/fileSystemThunks";
 import { connect } from "react-redux";
+import { FilePathUtils } from "@src/services/fileService";
 
 interface Props {
   entries: FileTreeItem[];
+  showHiddenFiles: boolean;
   getChildren: (entry: FileTreeItem) => FileTreeItem[];
   toggleDir: (item: FileTreeItem) => void;
   openFile: (file: FileTreeItem) => void;
@@ -21,21 +23,19 @@ interface TreeItemProps {
 
 interface TreeDirProps {
   item: FileTreeItem;
+  showHiddenFiles: boolean;
   getChildren: (entry: FileTreeItem) => FileTreeItem[];
   toggleDir: (item: FileTreeItem) => void;
   openFile: (file: FileTreeItem) => void;
 }
 
-const getFileName = (file: FileEntry): string => {
-  const parts = file.path.split("/");
-  return parts[parts.length - 1];
-};
-
 const TreeItemFile: React.FC<TreeItemProps> = (props: TreeItemProps) => {
   const onClick = () => props.onClick(props.item);
   return (
     <li key={props.item.file.path}>
-      <div onClick={onClick}>{getFileName(props.item.file)}</div>
+      <div className="entry" onClick={onClick}>
+        {FilePathUtils.getFileName(props.item.file.path)}
+      </div>
     </li>
   );
 };
@@ -45,12 +45,13 @@ const TreeItemDir: React.FC<TreeDirProps> = (props: TreeDirProps) => {
   const expandedIcon = props.item.isExpanded ? "▾" : "▸";
   return (
     <li key={props.item.file.path}>
-      <div onClick={onClick}>
-        {expandedIcon} {getFileName(props.item.file)}
+      <div className="entry" onClick={onClick}>
+        {expandedIcon} {FilePathUtils.getFileName(props.item.file.path)}
       </div>
       {props.item.isExpanded && props.item.children !== null ? (
         <FileTreeRoot
           entries={props.getChildren(props.item)}
+          showHiddenFiles={props.showHiddenFiles}
           getChildren={props.getChildren}
           toggleDir={props.toggleDir}
           openFile={props.openFile}
@@ -63,7 +64,8 @@ const TreeItemDir: React.FC<TreeDirProps> = (props: TreeDirProps) => {
 };
 
 const FileTreeRoot: React.FC<Props> = (props: Props) => {
-  const filterHidden = (item: FileTreeItem): boolean => !getFileName(item.file).startsWith(".");
+  const filterHidden = (item: FileTreeItem): boolean =>
+    props.showHiddenFiles || !FilePathUtils.getFileName(item.file.path).startsWith(".");
   const fileTree = props.entries.filter(filterHidden).map((entry) => {
     if (entry.file.type === FileType.FILE) {
       return <TreeItemFile key={entry.file.path} item={entry} onClick={props.openFile} />;
@@ -72,6 +74,7 @@ const FileTreeRoot: React.FC<Props> = (props: Props) => {
       <TreeItemDir
         key={entry.file.path}
         item={entry}
+        showHiddenFiles={props.showHiddenFiles}
         toggleDir={props.toggleDir}
         openFile={props.openFile}
         getChildren={props.getChildren}
@@ -83,6 +86,7 @@ const FileTreeRoot: React.FC<Props> = (props: Props) => {
 
 const mapStateToProps = (state: AppState) => ({
   entries: getFileTreeRoot(state.fileTree),
+  showHiddenFiles: state.settings.appSettings.showHiddenFiles,
   getChildren: (entry: FileTreeItem) => getFileTreeChildren(state.fileTree, entry),
 });
 

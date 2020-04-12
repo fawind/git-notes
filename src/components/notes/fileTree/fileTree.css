@@ -3,6 +3,10 @@
   padding-inline-start: 20px;
 }
 
-.file-tree li {
+.file-tree .entry {
   cursor: pointer;
+}
+
+.file-tree .entry:hover {
+  color: var(--fgLight);
 }

@@ -1,0 +1,9 @@
+.file-tree-actions {
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.file-tree-actions a:hover {
+  color: var(--fgLight);
+}
