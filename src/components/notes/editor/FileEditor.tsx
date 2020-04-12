@@ -1,25 +1,38 @@
-import * as React from 'react';
+import * as React from "react";
 
-import './editor.css';
-import {EditorContent} from '@src/components/notes/editor/EditorContent';
-import {EditorToolbar} from '@src/components/notes/editor/EditorToolbar';
-import {FileEditStore} from '@src/store/fileEditStore';
-import {inject} from '@src/appModule';
-import {observer} from 'mobx-react';
+import "./editor.css";
+import { EditorContent } from "@src/components/notes/editor/EditorContent";
+import { EditorToolbar } from "@src/components/notes/editor/EditorToolbar";
+import { CurrentFile, FileEntry, ThemeSettings } from "@src/store/types";
+import { AppState } from "@src/store/appState";
+import { WriteFile } from "@src/store/thunks/fileSystemThunks";
+import { connect } from "react-redux";
 
-@observer
-export class FileEditor extends React.PureComponent<{}> {
-  @inject(FileEditStore) private fileEditStore: FileEditStore;
-
-  render() {
-    if (!this.fileEditStore.currentFile) {
-      return <div/>;
-    }
-    return (
-      <div className="editor">
-        <EditorToolbar/>
-        <EditorContent/>
-      </div>
-    );
-  }
+interface Props {
+  currentFile: CurrentFile | null;
+  theme: ThemeSettings;
+  onSave: (file: FileEntry, getContent: () => string) => void;
 }
+
+const FileEditorComponent: React.FC<Props> = (props: Props) => {
+  if (!props.currentFile) {
+    return <div />;
+  }
+  return (
+    <div className="editor">
+      <EditorToolbar currentFile={props.currentFile} />
+      <EditorContent currentFile={props.currentFile} onSave={props.onSave} theme={props.theme} />
+    </div>
+  );
+};
+
+const mapStateToProps = (state: AppState) => ({
+  currentFile: state.currentFile,
+  theme: state.settings.theme,
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+  onSave: (file: FileEntry, getContent: () => string) => dispatch(WriteFile(file, getContent)),
+});
+
+export const FileEditor = connect(mapStateToProps, mapDispatchToProps)(FileEditorComponent);

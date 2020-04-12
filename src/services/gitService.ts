@@ -1,116 +1,108 @@
-import * as git from 'isomorphic-git';
-import {PushResult} from 'isomorphic-git';
+import * as git from "isomorphic-git";
+import { PushResult } from "isomorphic-git";
 // tslint:disable-next-line:no-submodule-imports
-import * as http from 'isomorphic-git/http/web';
-import {FileEntry} from '@src/store/types';
-import {FileService} from '@src/services/fileService';
-import {inject, injectable} from 'inversify';
-import {appSymbols} from '@src/appModule';
-import {SettingsStore} from '@src/store/settingsStore';
+import * as http from "isomorphic-git/http/web";
+import { FileEntry, FileType, RepoSettings } from "@src/store/types";
+import { FileSystem } from "@src/services/fileSystem";
 
-@injectable()
 export class GitService {
-  private readonly fileService: FileService;
-  private readonly fs: any;
-  private readonly settingsStore: SettingsStore;
-  private corsProxy = 'https://cors.isomorphic-git.org';
-  private rootDir: FileEntry;
+  private static GIT_DIR = "/";
 
-  constructor(
-    @inject(FileService) fileService: FileService,
-    @inject(SettingsStore) settingsStore: SettingsStore,
-    @inject(appSymbols.ROOT_DIR) rootDir: FileEntry) {
-    this.fileService = fileService;
-    this.fs = fileService.getFSInstance();
-    this.settingsStore = settingsStore;
-    this.rootDir = rootDir;
-    // For debugging
-    (window as any).git = git;
-    (window as any).http = http;
-    (window as any).gitService = this;
-  }
-
-  async clone() {
-    console.log('Clearing FS...');
-    await this.fileService.wipeFs();
-    console.log(`Cloning repo "${this.settingsStore.url}"...`);
+  static async clone(repo: RepoSettings) {
+    console.log("clone", repo);
+    console.log("Clearing FS...");
+    await FileSystem.wipe();
     await git.clone({
-      fs: this.fileService.getFSInstance(),
+      fs: FileSystem.getBacking(),
       http: http,
-      dir: this.rootDir.path,
-      corsProxy: this.corsProxy,
+      dir: this.GIT_DIR,
       singleBranch: true,
       depth: 1,
-      url: this.settingsStore.url!,
-      onAuth: () => this.getAuth(),
+      url: repo.url!,
+      ref: repo.branch,
+      ...this.getCorsProxy(repo),
+      onAuth: () => this.getAuth(repo),
     });
-    console.log('Finished cloning.');
+    console.log("Finished cloning.");
   }
 
-  async getModifiedFiles(): Promise<FileEntry[]> {
-    const status = await git.statusMatrix({fs: this.fs, dir: this.rootDir.path});
-    const FILE = 0, HEAD = 1, WORKDIR = 2;
+  static async getModifiedFiles(): Promise<FileEntry[]> {
+    const status = await git.statusMatrix({
+      fs: FileSystem.getBacking(),
+      dir: this.GIT_DIR,
+    });
+    const FILE = 0,
+      HEAD = 1,
+      WORKDIR = 2;
     return status
-      .filter(row => row[HEAD] !== row[WORKDIR])
-      .map(row => FileEntry.file(row[FILE]));
+      .filter((row) => row[HEAD] !== row[WORKDIR])
+      .map((row) => ({ path: row[FILE], type: FileType.FILE }));
   }
 
-  async checkoutFile(file: FileEntry): Promise<void> {
+  static async checkoutFile(file: FileEntry, repo: RepoSettings): Promise<void> {
     await git.checkout({
-      fs: this.fs,
-      dir: this.rootDir.path,
-      ref: this.settingsStore.branch,
+      fs: FileSystem.getBacking(),
+      dir: this.GIT_DIR,
+      ref: repo.branch,
       filepaths: [this.getPath(file)],
     });
   }
 
-  async pushFile(file: FileEntry): Promise<void> {
-    await git.add({fs: this.fs, dir: this.rootDir.path, filepath: this.getPath(file)});
+  static async pushFile(file: FileEntry, repo: RepoSettings): Promise<void> {
+    await git.add({
+      fs: FileSystem.getBacking(),
+      dir: this.GIT_DIR,
+      filepath: this.getPath(file),
+    });
     await git.commit({
-      fs: this.fs,
-      dir: this.rootDir.path,
+      fs: FileSystem.getBacking(),
+      dir: this.GIT_DIR,
       author: {
-        name: this.settingsStore.user!,
-        email: this.settingsStore.email,
+        name: repo.user!,
+        email: repo.email!,
       },
-      message: this.settingsStore.commitMessage,
+      message: repo.defaultCommitMessage,
     });
     const response: PushResult = await git.push({
-      fs: this.fs,
+      fs: FileSystem.getBacking(),
       http,
-      dir: '/',
-      corsProxy: this.corsProxy,
-      onAuth: () => this.getAuth(),
+      dir: this.GIT_DIR,
+      ...this.getCorsProxy(repo),
+      onAuth: () => this.getAuth(repo),
     });
     if (response.error) {
       throw new Error(`Error pushing changes: ${response.error}`);
     }
   }
 
-  async pull(): Promise<void> {
+  static async pull(repo: RepoSettings): Promise<void> {
     await git.pull({
-      fs: this.fs,
+      fs: FileSystem.getBacking(),
       http,
-      dir: '/',
-      corsProxy: this.corsProxy,
-      onAuth: () => this.getAuth(),
+      dir: "/",
+      ...this.getCorsProxy(repo),
+      onAuth: () => this.getAuth(repo),
     });
   }
 
-  private getPath(file: FileEntry): string {
-    if (file.path.length > 0 && file.path[0] === '/') {
+  private static getPath(file: FileEntry): string {
+    if (file.path.length > 0 && file.path[0] === "/") {
       return file.path.substr(1);
     }
     return file.path;
   }
 
-  private getAuth(): { username: string, password?: string } {
-    if (!this.settingsStore.user) {
-      throw new Error('No user name set');
+  private static getCorsProxy(repo: RepoSettings): {} | { corsProxy: string } {
+    return repo.corsProxy === null ? {} : { corsProxy: repo.corsProxy };
+  }
+
+  private static getAuth(repo: RepoSettings): { username: string; password?: string } {
+    if (!repo.user) {
+      throw new Error("No user name set");
     }
-    if (!this.settingsStore.token) {
-      return {username: this.settingsStore.user};
+    if (!repo.token) {
+      return { username: repo.user };
     }
-    return {username: this.settingsStore.user, password: this.settingsStore.token};
+    return { username: repo.user, password: repo.token };
   }
 }

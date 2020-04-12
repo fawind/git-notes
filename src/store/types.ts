@@ -1,47 +1,54 @@
 export const enum FileType {
-  File = 'FILE',
-  Directory = 'DIRECTORY',
+  FILE = "FILE",
+  DIRECTORY = "DIRECTORY",
 }
 
-export const getPath = (path: string): string => {
-  if (path.length > 0 && path[0] === '/') {
-    return path;
-  }
-  return '/' + path;
-};
-
-export class FileEntry {
-  public readonly path: string;
-  public readonly type: FileType;
-  public readonly name: string;
-
-  static file(path: string): FileEntry {
-    return new FileEntry(path, FileType.File);
-  }
-
-  static dir(path: string): FileEntry {
-    return new FileEntry(path, FileType.Directory);
-  }
-
-  constructor(path: string, type: FileType) {
-    this.path = getPath(path);
-    this.type = type;
-    this.name = FileEntry.getName(path, this.type === FileType.File);
-  }
-
-  isFile(): boolean {
-    return this.type === FileType.File;
-  }
-
-  isDirectory(): boolean {
-    return this.type === FileType.Directory;
-  }
-
-  private static getName(path: string, isFile: boolean): string {
-    const parts = path.split('/');
-    const name = parts.length <= 1 ? path : parts[parts.length - 1];
-    return isFile ? name : name + '/';
-  }
+export interface FileEntry {
+  path: string;
+  type: FileType;
 }
 
-export const ROOT_DIR = FileEntry.dir('/');
+export interface CurrentFile {
+  file: FileEntry;
+  content: string;
+}
+
+export interface FileTree {
+  [path: string]: FileTreeItem;
+}
+
+export interface FileTreeItem {
+  file: FileEntry;
+  children: string[] | null;
+  isExpanded: boolean;
+}
+
+export interface Settings {
+  repo: RepoSettings;
+  theme: ThemeSettings;
+  appSettings: AppSettings;
+}
+
+export interface RepoSettings {
+  url: string | null;
+  user: string | null;
+  token: string | null;
+  email: string | null;
+  corsProxy: string | null;
+  branch: string;
+  defaultCommitMessage: string;
+}
+
+export interface ThemeSettings {
+  bg: string;
+  bgLight: string;
+  fg: string;
+  fgLight: string;
+  primary: string;
+  link: string;
+}
+
+export interface AppSettings {
+  showHiddenFiles: boolean;
+  showSidebar: boolean;
+}

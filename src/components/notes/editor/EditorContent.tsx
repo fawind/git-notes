@@ -1,40 +1,41 @@
-import * as React from 'react';
-import Editor from 'rich-markdown-editor';
-import {getEditorTheme} from '@src/components/notes/editor/editorTheme';
-import {FileEditStore} from '@src/store/fileEditStore';
-import {SettingsStore} from '@src/store/settingsStore';
-import {inject} from '@src/appModule';
-import {observer} from 'mobx-react';
+import * as React from "react";
+import Editor from "rich-markdown-editor";
+import { getEditorTheme } from "@src/components/notes/editor/editorTheme";
+import { CurrentFile, FileEntry, ThemeSettings } from "@src/store/types";
 
-@observer
-export class EditorContent extends React.PureComponent<{}> {
-  @inject(FileEditStore) private fileEditStore: FileEditStore;
-  @inject(SettingsStore) private settingsStore: SettingsStore;
-
-  constructor(props: any) {
-    super(props);
-    this.onEditorChange = this.onEditorChange.bind(this);
-  }
-
-  private onEditorChange(getValue: () => string) {
-    if (this.fileEditStore.currentFile) {
-      this.fileEditStore.onChange(this.fileEditStore.currentFile.file, getValue);
-    }
-  }
-
-  render() {
-    return (
-      <div className="editor-content">
-        <Editor
-          key={this.fileEditStore.currentFile!.file.path}
-          id={this.fileEditStore.currentFile!.file.path}
-          defaultValue={this.fileEditStore.currentFile!.content}
-          onChange={this.onEditorChange}
-          autoFocus={true}
-          placeholder={'Start writing...'}
-          theme={getEditorTheme(this.settingsStore.theme)}
-        />
-      </div>
-    );
-  }
+interface Props {
+  currentFile: CurrentFile;
+  theme: ThemeSettings;
+  onSave: (file: FileEntry, getContent: () => string) => void;
 }
+
+let saveTimeout = -1;
+const WRITE_TIMEOUT = 400;
+
+export const EditorContent: React.FC<Props> = (props: Props) => {
+  const onEditorChange = (getValue: () => string) => {
+    if (saveTimeout !== -1) {
+      window.clearTimeout(saveTimeout);
+    }
+    saveTimeout = window.setTimeout(() => {
+      const content = getValue();
+      if (props.currentFile.content !== content) {
+        props.onSave(props.currentFile.file, getValue);
+      }
+    });
+  };
+
+  return (
+    <div className="editor-content">
+      <Editor
+        key={props.currentFile.file.path}
+        id={props.currentFile.file.path}
+        defaultValue={props.currentFile.content}
+        onChange={onEditorChange}
+        autoFocus={true}
+        placeholder={"Start writing..."}
+        theme={getEditorTheme(props.theme)}
+      />
+    </div>
+  );
+};

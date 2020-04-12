@@ -1,29 +1,30 @@
-import 'reflect-metadata'; // Reflect Polyfill
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import {HashRouter, Redirect, Route} from 'react-router-dom';
+import "reflect-metadata"; // Reflect Polyfill
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { HashRouter, Route } from "react-router-dom";
 
-import 'main.css';
-import {FileTreeStore} from '@src/store/fileTreeStore';
-import {EditorApp} from '@src/components/notes/EditorApp';
-import {Landing} from '@src/components/landing/Landing';
-import {appContainer} from '@src/appModule';
-import {SettingsStore} from '@src/store/settingsStore';
-import {FileStatusStore} from '@src/store/fileStatusStore';
+import { EditorApp } from "@src/components/notes/EditorApp";
+import { Landing } from "@src/components/landing/Landing";
+import { configureStore } from "@src/store/appState";
+import { Settings } from "@src/store/types";
+import { Provider } from "react-redux";
+import "main.css";
+import { LoadSettings } from "@src/store/actions";
 
-const fileTreeStore = appContainer.get<FileTreeStore>(FileTreeStore);
-const settingsStore = appContainer.get<SettingsStore>(SettingsStore);
-const fileStatusStore = appContainer.get<FileStatusStore>(FileStatusStore);
-fileTreeStore.init();
-fileStatusStore.updateModifiedFiles();
+const store = configureStore();
+store.dispatch(LoadSettings.create({}));
+
+const hasRepo = (settings: Settings): boolean => {
+  return settings.repo.url !== null;
+};
 
 const app: React.ReactElement = (
-  <HashRouter>
-    {settingsStore.hasRepo
-      ? <Route exact={true} path={'/'} component={EditorApp}/>
-      : <Redirect to={'/landing'}/>}
-    <Route exact={true} path={'/landing'} component={Landing} active={true}/>
-  </HashRouter>
+  <Provider store={store}>
+    <HashRouter>
+      <Route exact={true} path={"/"} component={EditorApp} />
+      <Route exact={true} path={"/landing"} component={Landing} />
+    </HashRouter>
+  </Provider>
 );
 
-ReactDOM.render(app, document.getElementById('app'));
+ReactDOM.render(app, document.getElementById("app"));

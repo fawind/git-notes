@@ -1,9 +1,9 @@
-import {AppTheme} from '@src/store/settingsStore';
-import {theme as baseTheme, Theme} from 'rich-markdown-editor';
+import { theme as baseTheme, Theme } from "rich-markdown-editor";
+import { ThemeSettings } from "@src/store/types";
 
-export const getEditorTheme = (theme: AppTheme): Theme => ({
+export const getEditorTheme = (theme: ThemeSettings): Theme => ({
   ...baseTheme,
-  fontFamily: 'inherit',
+  fontFamily: "inherit",
   background: theme.bg,
   text: theme.fg,
   link: theme.link,
