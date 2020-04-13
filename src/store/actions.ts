@@ -40,6 +40,7 @@ export const SetCloneSettings = TypedAction.define(
 )<{
   url: string;
   user: string | null;
+  email: string | null;
   token: string | null;
 }>();
 

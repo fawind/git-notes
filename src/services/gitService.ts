@@ -48,12 +48,35 @@ export class GitService {
     });
   }
 
-  static async pushFile(file: FileEntry, repo: RepoSettings): Promise<void> {
-    await git.add({
+  static async pull(repo: RepoSettings): Promise<void> {
+    await git.pull({
+      fs: FileSystem.getBacking(),
+      http,
+      dir: this.GIT_DIR,
+      author: {
+        name: repo.user!,
+        email: repo.email!,
+      },
+      ...this.getCorsProxy(repo),
+      onAuth: () => this.getAuth(repo),
+    });
+  }
+
+  static async addAll(): Promise<void> {
+    const repo = {
       fs: FileSystem.getBacking(),
       dir: this.GIT_DIR,
-      filepath: this.getPath(file),
-    });
+    };
+    await git.statusMatrix(repo).then((status) =>
+      Promise.all(
+        status.map(([filepath, , worktreeStatus]) => {
+          worktreeStatus ? git.add({ ...repo, filepath }) : git.remove({ ...repo, filepath });
+        })
+      )
+    );
+  }
+
+  static async commit(repo: RepoSettings): Promise<void> {
     await git.commit({
       fs: FileSystem.getBacking(),
       dir: this.GIT_DIR,
@@ -63,6 +86,9 @@ export class GitService {
       },
       message: repo.defaultCommitMessage,
     });
+  }
+
+  static async push(repo: RepoSettings): Promise<void> {
     const response: PushResult = await git.push({
       fs: FileSystem.getBacking(),
       http,
@@ -73,16 +99,6 @@ export class GitService {
     if (response.error) {
       throw new Error(`Error pushing changes: ${response.error}`);
     }
-  }
-
-  static async pull(repo: RepoSettings): Promise<void> {
-    await git.pull({
-      fs: FileSystem.getBacking(),
-      http,
-      dir: "/",
-      ...this.getCorsProxy(repo),
-      onAuth: () => this.getAuth(repo),
-    });
   }
 
   private static getPath(file: FileEntry): string {

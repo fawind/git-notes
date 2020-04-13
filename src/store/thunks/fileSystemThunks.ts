@@ -36,8 +36,10 @@ export const CreateFile = () => async (dispatch: any, getState: () => AppState) 
     await FileService.addDir(newFilePath);
   } else {
     await FileService.addFile(newFilePath, "");
+    dispatch(ReadFile({ path: newFilePath, type: FileType.FILE }));
   }
   dispatch(
+    // TODO: Fix filetree when adding file to rood dir
     RefreshFileTreeDir({ path: FilePathUtils.getParentDir(newFilePath), type: FileType.DIRECTORY })
   );
 };

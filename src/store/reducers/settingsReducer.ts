@@ -10,8 +10,8 @@ export const settingsReducer = TypedReducer.builder<Settings>()
     applyTheme(settings.theme);
     return settings;
   })
-  .withHandler(SetCloneSettings.TYPE, (state, { url, user, token }) => {
-    const settings = { ...state, repo: { ...state.repo, url, user, token } };
+  .withHandler(SetCloneSettings.TYPE, (state, { url, user, email, token }) => {
+    const settings = { ...state, repo: { ...state.repo, url, user, email, token } };
     saveSettings(settings);
     return settings;
   })
