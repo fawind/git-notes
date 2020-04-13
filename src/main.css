@@ -11,13 +11,11 @@
   --editorPadding: 10%;
 }
 
-html,
 body {
-  margin: 0;
-  padding: 0;
   color: var(--fg);
   background-color: var(--bg);
   font-family: "Nunito", sans-serif;
+  margin: 0;
 }
 
 .primary {
@@ -26,24 +24,16 @@ body {
 
 .container {
   display: flex;
-  flex: 1 1 0;
-  flex-direction: row;
-
-  position: absolute;
-  height: 100%;
-  left: 0;
-  right: 0;
+  height: 100vh;
 }
 
 .side-bar {
-  flex: 0 0 auto;
-  position: relative;
   width: 240px;
   background-color: var(--bgLight);
-  overflow: scroll;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-panel {
-  flex: 1 1 0;
-  position: relative;
+  width: 100%;
 }

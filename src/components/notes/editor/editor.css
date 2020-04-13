@@ -1,3 +1,9 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .editor-toolbar {
   height: 45px;
   display: flex;
@@ -13,11 +19,7 @@
 }
 
 .editor-content {
-  position: absolute;
-  top: 45px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  height: 100%;
   padding-left: var(--editorPadding);
   padding-right: var(--editorPadding);
   overflow: scroll;

@@ -1,6 +1,12 @@
 .file-tree {
+  height: 100%;
+  overflow: auto;
+}
+
+.file-tree ul {
   list-style: none;
   padding-inline-start: 20px;
+  white-space: nowrap;
 }
 
 .file-tree .entry {

@@ -6,8 +6,8 @@ import { FileTreeActions } from "@src/components/notes/fileTree/fileTreeActions"
 export const EditorApp: React.FC = () => (
   <div className="container">
     <div className="side-bar">
-      <FileTreeActions />
       <FileTree />
+      <FileTreeActions />
     </div>
     <div className="main-panel">
       <FileEditor />

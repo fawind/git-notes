@@ -13,7 +13,8 @@ interface Props {
 const FileTreeActionsComponent: React.FC<Props> = (props: Props) => {
   return (
     <div className="file-tree-actions">
-      <a onClick={props.onCreate}>New File</a> | <a onClick={props.onSync}>Sync Changes</a>
+      <a onClick={props.onCreate}>New File</a> | <a onClick={props.onSync}>Sync</a> |{" "}
+      <a>Settings</a>
     </div>
   );
 };

@@ -81,7 +81,15 @@ const FileTreeRoot: React.FC<Props> = (props: Props) => {
       />
     );
   });
-  return <ul className="file-tree">{fileTree}</ul>;
+  return <ul>{fileTree}</ul>;
+};
+
+const FileTreeWrapper: React.FC<Props> = (props: Props) => {
+  return (
+    <div className={"file-tree"}>
+      <FileTreeRoot {...props} />
+    </div>
+  );
 };
 
 const mapStateToProps = (state: AppState) => ({
@@ -98,4 +106,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export const FileTree = connect(mapStateToProps, mapDispatchToProps)(FileTreeRoot);
+export const FileTree = connect(mapStateToProps, mapDispatchToProps)(FileTreeWrapper);
