@@ -7,14 +7,8 @@
     "strictNullChecks": true,
     "module": "commonjs",
     "target": "es5",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
-    "types": [
-      "reflect-metadata",
-      "node"
-    ],
+    "lib": ["es2017", "dom"],
+    "types": ["node"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "removeComments": true,
@@ -23,9 +17,7 @@
     "allowJs": true,
     "baseUrl": "./",
     "paths": {
-      "@src/*": [
-        "src/*"
-      ]
+      "@src/*": ["src/*"]
     }
   }
 }
