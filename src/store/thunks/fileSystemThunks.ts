@@ -15,9 +15,7 @@ export const ReadFile = (file: FileEntry) => async (dispatch: Dispatch) => {
   dispatch(OpenFile.create({ file, content }));
 };
 
-export const WriteFile = (file: FileEntry, getContent: () => string) => async (
-  dispatch: Dispatch
-) => {
+export const WriteFile = (file: FileEntry, getContent: () => string) => async () => {
   await FileService.writeFile(file, getContent());
 };
 

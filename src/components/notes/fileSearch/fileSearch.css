@@ -1,0 +1,24 @@
+.file-search {
+    height: 300px;
+    background-color: var(--bgLight);
+}
+
+.file-search input {
+    box-sizing: border-box;
+    font-family: inherit;
+    outline: none;
+    font-size: 100%;
+    color: var(--fg);
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.file-search .result-item .match {
+    color: var(--primary);
+}
+
+.file-search .result-item.selected {
+    background-color: var(--fgLight);
+    color: var(--bgLight);
+}

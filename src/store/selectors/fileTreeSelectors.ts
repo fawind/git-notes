@@ -1,4 +1,4 @@
-import { FileEntry, FileTree, FileTreeItem } from "@src/store/types";
+import { FileTree, FileTreeItem } from "@src/store/types";
 import { ROOT_ENTRY } from "@src/store/reducers/fileTreeReducer";
 
 export const getFileTreeRoot = (fileTree: FileTree): FileTreeItem[] => {

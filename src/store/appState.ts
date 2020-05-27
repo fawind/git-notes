@@ -1,22 +1,17 @@
-import { CurrentFile, FileTree, Settings } from "@src/store/types";
-import {
-  Action,
-  applyMiddleware,
-  compose,
-  createStore,
-  Store,
-  StoreEnhancer,
-} from "redux";
-import { combineReducers, loggingMiddleware, TypedAction } from "redoodle";
+import { CurrentFile, FileTree, GUIState, Settings } from "@src/store/types";
+import { Action, applyMiddleware, compose, createStore, Store, StoreEnhancer } from "redux";
+import { combineReducers, loggingMiddleware } from "redoodle";
 import { openFileReducer } from "@src/store/reducers/openFileReducer";
 import { fileTreeReducer } from "@src/store/reducers/fileTreeReducer";
 import { settingsReducer } from "@src/store/reducers/settingsReducer";
 import thunkMiddleware, { ThunkMiddleware } from "redux-thunk";
+import { guiReducer } from "@src/store/reducers/guiReducer";
 
 export interface AppState {
   currentFile: CurrentFile | null;
   fileTree: FileTree;
   settings: Settings;
+  gui: GUIState;
 }
 
 const defaultSettings: Settings = {
@@ -47,6 +42,9 @@ const initialState: AppState = {
   currentFile: null,
   fileTree: {},
   settings: defaultSettings,
+  gui: {
+    fileSearchVisible: false,
+  },
 };
 
 export function configureStore(): Store<AppState> {
@@ -55,6 +53,7 @@ export function configureStore(): Store<AppState> {
       currentFile: openFileReducer,
       fileTree: fileTreeReducer,
       settings: settingsReducer,
+      gui: guiReducer,
     }),
     initialState,
     compose(

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import "./fileTree.css";
-import { FileEntry, FileTreeItem, FileType } from "@src/store/types";
+import { FileTreeItem, FileType } from "@src/store/types";
 import { AppState } from "@src/store/appState";
 import { getFileTreeChildren, getFileTreeRoot } from "@src/store/selectors/fileTreeSelectors";
 import { InitFileTree, ReadFile, ToggleFileTreeDir } from "@src/store/thunks/fileSystemThunks";

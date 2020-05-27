@@ -2,7 +2,7 @@ import * as React from "react";
 import { CurrentFile } from "@src/store/types";
 
 interface Props {
-  currentFile: CurrentFile;
+  currentFile: CurrentFile | null;
 }
 
 const getFileLocation = (path: string): JSX.Element[] => {
@@ -27,7 +27,7 @@ const getFileLocation = (path: string): JSX.Element[] => {
 export const EditorToolbar: React.FC<Props> = (props: Props) => {
   return (
     <div className="editor-toolbar">
-      <div>{getFileLocation(props.currentFile.file.path)}</div>
+      {props.currentFile ? <div>{getFileLocation(props.currentFile.file.path)}</div> : <div />}
     </div>
   );
 };

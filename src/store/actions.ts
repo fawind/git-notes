@@ -1,5 +1,5 @@
 import { TypedAction } from "redoodle";
-import { FileEntry } from "@src/store/types";
+import { FileEntry, FileSearchTarget } from "@src/store/types";
 
 export const OpenFile = TypedAction.define("@git-notes/OPEN_FILE")<{
   file: FileEntry;
@@ -16,9 +16,7 @@ export const SetFileTree = TypedAction.define("@git-notes/SET_FILE_TREE")<{
   files: FileEntry[];
 }>();
 
-export const CollapseFileTreeItem = TypedAction.define(
-  "@git-notes/COLLAPSE_FILE_TREE_ITEM"
-)<{
+export const CollapseFileTreeItem = TypedAction.define("@git-notes/COLLAPSE_FILE_TREE_ITEM")<{
   file: FileEntry;
 }>();
 
@@ -35,9 +33,7 @@ export const ExpandUnloadedFileTreeItem = TypedAction.define(
   children: FileEntry[];
 }>();
 
-export const SetCloneSettings = TypedAction.define(
-  "@git-notes/SET_CLONE_SETTINGS"
-)<{
+export const SetCloneSettings = TypedAction.define("@git-notes/SET_CLONE_SETTINGS")<{
   url: string;
   user: string | null;
   email: string | null;
@@ -45,3 +41,5 @@ export const SetCloneSettings = TypedAction.define(
 }>();
 
 export const LoadSettings = TypedAction.define("@git-notes/LOAD_SETTINGS")();
+
+export const ToggleFileSearch = TypedAction.define("@git-notes/TOGGLE_FILE_SEARCH")();

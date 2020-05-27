@@ -23,6 +23,10 @@ export interface FileTreeItem {
   isExpanded: boolean;
 }
 
+export interface GUIState {
+  fileSearchVisible: boolean;
+}
+
 export interface Settings {
   repo: RepoSettings;
   theme: ThemeSettings;
@@ -51,4 +55,21 @@ export interface ThemeSettings {
 export interface AppSettings {
   showHiddenFiles: boolean;
   showSidebar: boolean;
+}
+
+export enum Shortcuts {
+  TOGGLE_OMNIBAR = "TOGGLE_OMNIBAR",
+}
+
+export type FuzzyPrepared = any;
+export type HtmlString = string;
+
+export interface FileSearchTarget {
+  file: FileEntry;
+  preparedTarget: FuzzyPrepared;
+}
+
+export interface FileSearchResult {
+  file: FileEntry;
+  title: HtmlString;
 }

@@ -101,6 +101,11 @@ export class GitService {
     }
   }
 
+  static async listFiles(): Promise<FileEntry[]> {
+    const files = await git.listFiles({ fs: FileSystem.getBacking(), dir: this.GIT_DIR });
+    return files.map((file) => ({ path: `/${file}`, type: FileType.FILE }));
+  }
+
   private static getPath(file: FileEntry): string {
     if (file.path.length > 0 && file.path[0] === "/") {
       return file.path.substr(1);

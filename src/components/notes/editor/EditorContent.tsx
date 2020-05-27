@@ -4,13 +4,12 @@ import { getEditorTheme } from "@src/components/notes/editor/editorTheme";
 import { CurrentFile, FileEntry, ThemeSettings } from "@src/store/types";
 
 interface Props {
-  currentFile: CurrentFile;
+  currentFile: CurrentFile | null;
   theme: ThemeSettings;
   onSave: (file: FileEntry, getContent: () => string) => void;
 }
 
 let saveTimeout = -1;
-const WRITE_TIMEOUT = 400;
 
 export const EditorContent: React.FC<Props> = (props: Props) => {
   const onEditorChange = (getValue: () => string) => {
@@ -19,23 +18,27 @@ export const EditorContent: React.FC<Props> = (props: Props) => {
     }
     saveTimeout = window.setTimeout(() => {
       const content = getValue();
-      if (props.currentFile.content !== content) {
-        props.onSave(props.currentFile.file, getValue);
+      if (props.currentFile!.content !== content) {
+        props.onSave(props.currentFile!.file, getValue);
       }
     });
   };
 
   return (
     <div className="editor-content">
-      <Editor
-        key={props.currentFile.file.path}
-        id={props.currentFile.file.path}
-        defaultValue={props.currentFile.content}
-        onChange={onEditorChange}
-        autoFocus={true}
-        placeholder={"Start writing..."}
-        theme={getEditorTheme(props.theme)}
-      />
+      {props.currentFile ? (
+        <Editor
+          key={props.currentFile.file.path}
+          id={props.currentFile.file.path}
+          defaultValue={props.currentFile.content}
+          onChange={onEditorChange}
+          autoFocus={true}
+          placeholder={"Start writing..."}
+          theme={getEditorTheme(props.theme)}
+        />
+      ) : (
+        <div />
+      )}
     </div>
   );
 };
