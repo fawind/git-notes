@@ -31,6 +31,7 @@ export interface Settings {
   repo: RepoSettings;
   theme: ThemeSettings;
   appSettings: AppSettings;
+  keyBindings: KeyBindingsSettings;
 }
 
 export interface RepoSettings {
@@ -54,11 +55,22 @@ export interface ThemeSettings {
 
 export interface AppSettings {
   showHiddenFiles: boolean;
-  showSidebar: boolean;
+  showFileTree: boolean;
 }
 
-export enum Shortcuts {
-  TOGGLE_OMNIBAR = "TOGGLE_OMNIBAR",
+export interface KeyBindingsSettings {
+  toggleFileTree: Hotkey;
+  toggleFileSearch: Hotkey;
+}
+
+export interface Hotkey {
+  key: HotkeyAction;
+  shortcut: string;
+}
+
+export enum HotkeyAction {
+  TOGGLE_FILE_TREE = "TOGGLE_SIDEBAR",
+  TOGGLE_FILE_SEARCH = "TOGGLE_FILE_SEARCH",
 }
 
 export type FuzzyPrepared = any;

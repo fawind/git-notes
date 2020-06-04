@@ -1,5 +1,5 @@
 import * as React from "react";
-import Editor from "rich-markdown-editor";
+import RichMarkdownEditor from "rich-markdown-editor";
 import { getEditorTheme } from "@src/components/notes/editor/editorTheme";
 import { CurrentFile, FileEntry, ThemeSettings } from "@src/store/types";
 
@@ -12,6 +12,7 @@ interface Props {
 let saveTimeout = -1;
 
 export const EditorContent: React.FC<Props> = (props: Props) => {
+  const editorParentRef = React.useRef<HTMLDivElement>(null);
   const onEditorChange = (getValue: () => string) => {
     if (saveTimeout !== -1) {
       window.clearTimeout(saveTimeout);
@@ -24,15 +25,22 @@ export const EditorContent: React.FC<Props> = (props: Props) => {
     });
   };
 
+  /* Re-emit events to let them get handled by GlobalHotkeys */
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const newEvent = new KeyboardEvent(event.type, event.nativeEvent);
+    editorParentRef!.current!.dispatchEvent(newEvent);
+  };
+
   return (
-    <div className="editor-content">
+    <div className="editor-content" ref={editorParentRef}>
       {props.currentFile ? (
-        <Editor
+        <RichMarkdownEditor
           key={props.currentFile.file.path}
           id={props.currentFile.file.path}
           defaultValue={props.currentFile.content}
           onChange={onEditorChange}
           autoFocus={true}
+          onKeyDown={onKeyDown}
           placeholder={"Start writing..."}
           theme={getEditorTheme(props.theme)}
         />

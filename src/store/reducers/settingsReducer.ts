@@ -1,17 +1,23 @@
 import { TypedReducer } from "redoodle";
 import { Settings, ThemeSettings } from "@src/store/types";
-import { LoadSettings, SetCloneSettings } from "@src/store/actions";
+import { LoadSettings, SetCloneSettings, ToggleFileTree } from "@src/store/actions";
 
 const STORE_KEY = "settings";
 
 export const settingsReducer = TypedReducer.builder<Settings>()
   .withHandler(LoadSettings.TYPE, (state) => {
-    const settings = loadSettings(state);
+    const settings = { ...state, ...loadSettings(state) };
     applyTheme(settings.theme);
     return settings;
   })
   .withHandler(SetCloneSettings.TYPE, (state, { url, user, email, token }) => {
     const settings = { ...state, repo: { ...state.repo, url, user, email, token } };
+    saveSettings(settings);
+    return settings;
+  })
+  .withHandler(ToggleFileTree.TYPE, (state) => {
+    const settings = { ...state };
+    settings.appSettings.showFileTree = !settings.appSettings.showFileTree;
     saveSettings(settings);
     return settings;
   })

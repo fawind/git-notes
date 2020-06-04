@@ -43,3 +43,5 @@ export const SetCloneSettings = TypedAction.define("@git-notes/SET_CLONE_SETTING
 export const LoadSettings = TypedAction.define("@git-notes/LOAD_SETTINGS")();
 
 export const ToggleFileSearch = TypedAction.define("@git-notes/TOGGLE_FILE_SEARCH")();
+
+export const ToggleFileTree = TypedAction.define("@git-notes/TOGGLE_FILE_TREE")();

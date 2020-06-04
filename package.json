@@ -28,10 +28,13 @@
     "redoodle": "^2.3.2",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "rich-markdown-editor": "^9.11.0"
+    "rich-markdown-editor": "^10.0.3"
   },
   "devDependencies": {
     "@types/node": "^12.12.17",
+    "@types/prosemirror-inputrules": "^1.0.2",
+    "@types/prosemirror-keymap": "^1.0.2",
+    "@types/prosemirror-markdown": "^1.0.3",
     "@types/react": "^16.9.25",
     "@types/react-dom": "^16.9.4",
     "@types/react-redux": "^7.1.7",

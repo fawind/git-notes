@@ -1,4 +1,4 @@
-import { CurrentFile, FileTree, GUIState, Settings } from "@src/store/types";
+import { CurrentFile, FileTree, GUIState, HotkeyAction, Settings } from "@src/store/types";
 import { Action, applyMiddleware, compose, createStore, Store, StoreEnhancer } from "redux";
 import { combineReducers, loggingMiddleware } from "redoodle";
 import { openFileReducer } from "@src/store/reducers/openFileReducer";
@@ -26,7 +26,7 @@ const defaultSettings: Settings = {
   },
   appSettings: {
     showHiddenFiles: false,
-    showSidebar: true,
+    showFileTree: true,
   },
   theme: {
     bg: "#fbfbfb",
@@ -35,6 +35,10 @@ const defaultSettings: Settings = {
     fgLight: "#a3abb3",
     primary: "#DD4C4F",
     link: "#0366d6",
+  },
+  keyBindings: {
+    toggleFileTree: { key: HotkeyAction.TOGGLE_FILE_TREE, shortcut: "command+." },
+    toggleFileSearch: { key: HotkeyAction.TOGGLE_FILE_SEARCH, shortcut: "command+k" },
   },
 };
 
