@@ -25,11 +25,6 @@
   overflow: scroll;
 }
 
-/* HACK: Hide block insert popup from 'rich-markdown-editor' */
-div[class^="BlockInsert_"] {
-  display: none;
-}
-
 .file-settings-button {
   cursor: pointer;
   padding-left: 5px;

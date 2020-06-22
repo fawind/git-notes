@@ -1,11 +1,10 @@
 import * as React from "react";
-import { RouteComponentProps } from "react-router";
 import { ChangeEvent, useState } from "react";
+import { RouteComponentProps } from "react-router";
 import { RepoSettings } from "@src/store/types";
 import { AppState } from "@src/store/appState";
 import { connect } from "react-redux";
 import { Clone } from "@src/store/thunks/gitThunks";
-import { Dispatch } from "redux";
 
 interface Props extends RouteComponentProps {
   repo: RepoSettings;
