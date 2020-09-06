@@ -60,3 +60,6 @@
 .file-settings-dropdown .option {
   cursor: pointer;
 }
+.file-settings-dropdown .option:hover {
+  background-color: var(--fgLight);
+}

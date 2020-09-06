@@ -1,5 +1,5 @@
 import { TypedAction } from "redoodle";
-import { FileEntry, FileSearchTarget } from "@src/store/types";
+import { FileEntry } from "@src/store/types";
 
 export const OpenFile = TypedAction.define("@git-notes/OPEN_FILE")<{
   file: FileEntry;
@@ -7,10 +7,6 @@ export const OpenFile = TypedAction.define("@git-notes/OPEN_FILE")<{
 }>();
 
 export const CloseFile = TypedAction.define("@git-notes/CLOSE_FILE")();
-
-export const SaveFile = TypedAction.define("@git-notes/SAVE_FILE")<{
-  content: string;
-}>();
 
 export const SetFileTree = TypedAction.define("@git-notes/SET_FILE_TREE")<{
   files: FileEntry[];

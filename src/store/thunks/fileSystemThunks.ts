@@ -2,6 +2,7 @@ import { FilePathUtils, FileService } from "@src/services/fileService";
 import { Dispatch } from "redoodle";
 import { FileEntry, FileTreeItem, FileType } from "@src/store/types";
 import {
+  CloseFile,
   CollapseFileTreeItem,
   ExpandLoadedFileTreeItem,
   ExpandUnloadedFileTreeItem,
@@ -20,25 +21,64 @@ export const WriteFile = (file: FileEntry, getContent: () => string) => async ()
 };
 
 export const CreateFile = () => async (dispatch: any, getState: () => AppState) => {
-  const currentFilePath = FilePathUtils.getParentDir(getState().currentFile?.file.path || "");
-  let newFilePath = window.prompt(
-    "Enter path to create a new file (directories end with '/')",
-    currentFilePath
+  let newFilePath = requestFilePath(
+    FilePathUtils.getParentDir(getState().currentFile?.file.path || ""),
+    "Enter path to create a new file (directories end with '/')"
   );
-  if (!newFilePath || newFilePath.length === 0) {
+
+  if (newFilePath.length === 0) {
     return;
   }
-  const isDir = newFilePath[newFilePath.length - 1] === "/";
-  if (isDir) {
+
+  if (newFilePath.endsWith("/")) {
     newFilePath = newFilePath.slice(0, -1);
     await FileService.addDir(newFilePath);
   } else {
     await FileService.addFile(newFilePath, "");
     dispatch(ReadFile({ path: newFilePath, type: FileType.FILE }));
   }
+
   dispatch(
     // TODO: Fix filetree when adding file to rood dir
     RefreshFileTreeDir({ path: FilePathUtils.getParentDir(newFilePath), type: FileType.DIRECTORY })
+  );
+};
+
+export const DeleteFile = (file: FileEntry) => async (dispatch: any) => {
+  if (file.type === FileType.FILE) {
+    await FileService.removeFile(file);
+  } else {
+    await FileService.removeDir(file);
+  }
+
+  if (!confirm("Are you sure you want to delete the file?")) {
+    return;
+  }
+
+  dispatch(CloseFile.create({}));
+
+  dispatch(
+    RefreshFileTreeDir({
+      path: FilePathUtils.getParentDir(file.path),
+      type: FileType.DIRECTORY,
+    })
+  );
+};
+
+export const MoveFile = (file: FileEntry) => async (dispatch: any) => {
+  const newFilePath = requestFilePath(file.path, "Enter new path to move file");
+  if (newFilePath.length === 0) {
+    return;
+  }
+  await FileService.moveFile(file, newFilePath);
+
+  dispatch(ReadFile({ path: newFilePath, type: file.type }));
+
+  dispatch(
+    RefreshFileTreeDir({
+      path: FilePathUtils.getParentDir(file.path),
+      type: FileType.DIRECTORY,
+    })
   );
 };
 
@@ -71,4 +111,22 @@ export const RefreshFileTreeDir = (dir: FileEntry) => async (
   }
   const children = await FileService.listDir(item.file);
   dispatch(ExpandUnloadedFileTreeItem.create({ file: item.file, children }));
+};
+
+const requestFilePath = (placeholder: string, message: string): string => {
+  let newFilePath = window.prompt(message, placeholder);
+
+  if (!newFilePath || newFilePath.length === 0) {
+    return "";
+  }
+
+  if (newFilePath[0] !== "/") {
+    newFilePath = "/" + newFilePath;
+  }
+
+  if (!newFilePath.endsWith("/") && !newFilePath.endsWith(".md")) {
+    newFilePath = newFilePath + ".md";
+  }
+
+  return newFilePath;
 };

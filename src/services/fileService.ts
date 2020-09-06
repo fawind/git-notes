@@ -60,6 +60,10 @@ export class FileService {
     });
   }
 
+  static async moveFile(file: FileEntry, newPath: string): Promise<void> {
+    await FileSystem.get().rename(file.path, newPath);
+  }
+
   static getRootDir(): FileEntry {
     return FileService.ROOT_DIR;
   }

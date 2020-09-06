@@ -18,7 +18,7 @@ interface Props {
 const FileEditorComponent: React.FC<Props> = (props: Props) => {
   return (
     <div className="editor">
-      <EditorToolbar currentFile={props.currentFile} />
+      <EditorToolbar />
       <EditorContent currentFile={props.currentFile} onSave={props.onSave} theme={props.theme} />
       <FileSearch />
     </div>
