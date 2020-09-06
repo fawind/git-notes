@@ -2,18 +2,19 @@ import * as React from "react";
 import { CurrentFile, FileEntry } from "@src/store/types";
 import { EditorToolbarOptions } from "@src/components/notes/editor/EditorToolbarOptions";
 import { AppState } from "@src/store/appState";
-import { DeleteFile, MoveFile } from "@src/store/thunks/fileSystemThunks";
+import { DeleteFile, EncryptCurrentFile, MoveFile } from "@src/store/thunks/fileSystemThunks";
 import { connect } from "react-redux";
 
 interface Props {
   currentFile: CurrentFile | null;
   deleteFile: (file: FileEntry) => void;
   moveFile: (file: FileEntry) => void;
+  encryptCurrentFile: () => void;
 }
 
-const getFileLocation = (path: string): JSX.Element[] => {
+const getFileLocation = (file: FileEntry): JSX.Element[] => {
   const elements: JSX.Element[] = [];
-  const parts = path.split("/");
+  const parts = file.path.split("/");
   parts.forEach((part, i) => {
     if (part === "") {
       return;
@@ -27,6 +28,15 @@ const getFileLocation = (path: string): JSX.Element[] => {
       );
     }
   });
+
+  if (file.secret) {
+    elements.push(
+      <span key="enc" className="path-divider">
+        (encrypted)
+      </span>
+    );
+  }
+
   return elements;
 };
 
@@ -36,11 +46,12 @@ const EditorToolbarComponent: React.FC<Props> = (props: Props) => {
   }
   return (
     <div className="editor-toolbar">
-      <div>{getFileLocation(props.currentFile!.file.path)}</div>
+      <div>{getFileLocation(props.currentFile!.file)}</div>
       <EditorToolbarOptions
         currentFile={props.currentFile!.file}
         moveFile={props.moveFile}
         deleteFile={props.deleteFile}
+        encryptCurrentFile={props.encryptCurrentFile}
       />
     </div>
   );
@@ -53,6 +64,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: any) => ({
   moveFile: (file: FileEntry) => dispatch(MoveFile(file)),
   deleteFile: (file: FileEntry) => dispatch(DeleteFile(file)),
+  encryptCurrentFile: () => dispatch(EncryptCurrentFile()),
 });
 
 export const EditorToolbar = connect(mapStateToProps, mapDispatchToProps)(EditorToolbarComponent);

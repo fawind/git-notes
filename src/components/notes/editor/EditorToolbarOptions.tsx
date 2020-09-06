@@ -6,6 +6,7 @@ interface Props {
   currentFile: FileEntry;
   deleteFile: (file: FileEntry) => void;
   moveFile: (file: FileEntry) => void;
+  encryptCurrentFile: () => void;
 }
 
 export const EditorToolbarOptions: React.FC<Props> = (props: Props) => {
@@ -19,6 +20,10 @@ export const EditorToolbarOptions: React.FC<Props> = (props: Props) => {
     props.moveFile(props.currentFile);
     setDropdownVisible(false);
   };
+  const onEncrypt = () => {
+    props.encryptCurrentFile();
+    setDropdownVisible(false);
+  };
   const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
 
   const renderDropdown = () => (
@@ -30,6 +35,10 @@ export const EditorToolbarOptions: React.FC<Props> = (props: Props) => {
         <hr />
         <div className="option" onClick={onDelete}>
           Delete file
+        </div>
+        <hr />
+        <div className="option" onClick={onEncrypt}>
+          Encrypt file
         </div>
       </div>
       <div className="file-settings-dropdown-overlay" onClick={toggleDropdown} />

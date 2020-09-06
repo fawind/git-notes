@@ -6,6 +6,7 @@ export const enum FileType {
 export interface FileEntry {
   path: string;
   type: FileType;
+  secret?: string;
 }
 
 export interface CurrentFile {

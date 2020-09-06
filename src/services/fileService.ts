@@ -1,5 +1,6 @@
 import { FileEntry, FileType } from "@src/store/types";
 import { FileSystem } from "@src/services/fileSystem";
+import * as CryptoJS from "crypto-js";
 
 export class FileService {
   private static readonly ROOT_PATH = "/";
@@ -109,5 +110,26 @@ export class FilePathUtils {
     }
     parts.pop();
     return parts.join("/");
+  }
+}
+
+export class EncryptionUtils {
+  static ENCRYPTION_PREFIX = "===AES:";
+
+  static isEncrypted(content: string): boolean {
+    return content.startsWith(this.ENCRYPTION_PREFIX);
+  }
+
+  static encrypt(content: string, key: string): string {
+    const encrypted = CryptoJS.AES.encrypt(content, key).toString();
+    return this.ENCRYPTION_PREFIX + encrypted;
+  }
+
+  static decrypt(content: string, key: string): string {
+    if (!content.startsWith(this.ENCRYPTION_PREFIX)) {
+      throw new Error("Content is not encrypted");
+    }
+    const rawContent = content.slice(this.ENCRYPTION_PREFIX.length);
+    return CryptoJS.AES.decrypt(rawContent, key).toString(CryptoJS.enc.Utf8);
   }
 }

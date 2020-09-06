@@ -1,4 +1,4 @@
-import { FilePathUtils, FileService } from "@src/services/fileService";
+import { EncryptionUtils, FilePathUtils, FileService } from "@src/services/fileService";
 import { Dispatch } from "redoodle";
 import { FileEntry, FileTreeItem, FileType } from "@src/store/types";
 import {
@@ -12,12 +12,45 @@ import {
 import { AppState } from "@src/store/appState";
 
 export const ReadFile = (file: FileEntry) => async (dispatch: Dispatch) => {
-  const content = await FileService.readFile(file);
-  dispatch(OpenFile.create({ file, content }));
+  let content = await FileService.readFile(file);
+
+  let secret;
+  if (EncryptionUtils.isEncrypted(content)) {
+    secret = window.prompt("Enter password");
+    if (!secret || secret.length === 0) {
+      return;
+    }
+    content = EncryptionUtils.decrypt(content, secret);
+    if (content === "") {
+      window.alert("Error decrypting note");
+      return;
+    }
+  }
+
+  dispatch(OpenFile.create({ file: { ...file, secret }, content }));
 };
 
 export const WriteFile = (file: FileEntry, getContent: () => string) => async () => {
-  await FileService.writeFile(file, getContent());
+  let content = getContent();
+  if (file.secret) {
+    content = EncryptionUtils.encrypt(content, file.secret);
+  }
+  await FileService.writeFile(file, content);
+};
+
+export const EncryptCurrentFile = () => async (dispatch: any, getState: () => AppState) => {
+  const state = getState();
+  console.log(state);
+  if (!state.currentFile) {
+    return;
+  }
+  const secret = window.prompt("Enter new password to encrypt file");
+  if (!secret) {
+    return;
+  }
+  const file = { ...state.currentFile.file, secret };
+  dispatch(OpenFile.create({ file, content: state.currentFile.content }));
+  dispatch(WriteFile(file, () => state.currentFile!.content));
 };
 
 export const CreateFile = () => async (dispatch: any, getState: () => AppState) => {

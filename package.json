@@ -17,6 +17,7 @@
   "homepage": "https://github.com/fawind/git-notes#readme",
   "dependencies": {
     "@isomorphic-git/lightning-fs": "^4.0.1",
+    "crypto-js": "^4.0.0",
     "fuzzysort": "^1.1.4",
     "immutable": "^4.0.0-rc.12",
     "isomorphic-git": "^1.3.1",
@@ -31,6 +32,7 @@
     "rich-markdown-editor": "^10.0.3"
   },
   "devDependencies": {
+    "@types/crypto-js": "^3.1.47",
     "@types/node": "^12.12.17",
     "@types/prosemirror-inputrules": "^1.0.2",
     "@types/prosemirror-keymap": "^1.0.2",
