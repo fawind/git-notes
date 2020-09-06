@@ -34,6 +34,7 @@ export const SetCloneSettings = TypedAction.define("@git-notes/SET_CLONE_SETTING
   user: string | null;
   email: string | null;
   token: string | null;
+  corsProxy: string | null;
 }>();
 
 export const LoadSettings = TypedAction.define("@git-notes/LOAD_SETTINGS")();

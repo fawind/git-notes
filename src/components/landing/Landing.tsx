@@ -13,6 +13,7 @@ interface Props extends RouteComponentProps {
     user: string | null,
     email: string | null,
     token: string | null,
+    corsProxy: string | null,
     onSuccess: () => void
   ) => void;
 }
@@ -22,15 +23,19 @@ const LandingComponent: React.FC<Props> = (props: Props) => {
   const [user, setUser] = useState(props.repo.user || "");
   const [email, setEmail] = useState(props.repo.email || "");
   const [token, setToken] = useState(props.repo.token || "");
+  const [corsProxy, setCorsProxy] = useState(props.repo.corsProxy || "");
   const onUrlChange = (e: ChangeEvent<HTMLInputElement>) => setUrl(e.target.value);
   const onUserChange = (e: ChangeEvent<HTMLInputElement>) => setUser(e.target.value);
   const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
   const onTokenChange = (e: ChangeEvent<HTMLInputElement>) => setToken(e.target.value);
+  const onCorsProxyChange = (e: ChangeEvent<HTMLInputElement>) => setCorsProxy(e.target.value);
   const onSubmit = () => {
     if (url === "") {
       return;
     }
-    props.onClone(url, user || null, email || null, token || null, () => props.history.push("/"));
+    props.onClone(url, user || null, email || null, token || null, corsProxy || null, () =>
+      props.history.push("/")
+    );
   };
 
   return (
@@ -47,6 +52,9 @@ const LandingComponent: React.FC<Props> = (props: Props) => {
       <div>
         Token: <input type="text" value={token} onChange={onTokenChange} />
       </div>
+      <div>
+        CORS Proxy: <input type="text" value={corsProxy} onChange={onCorsProxyChange} />
+      </div>
       <button onClick={onSubmit}>Clone</button>
     </div>
   );
@@ -62,8 +70,9 @@ const mapDispatchToProps = (dispatch: any) => ({
     user: string | null,
     email: string | null,
     token: string | null,
+    corsProxy: string | null,
     onSuccess: () => void
-  ) => dispatch(Clone(url, user, email, token, onSuccess)),
+  ) => dispatch(Clone(url, user, email, token, corsProxy, onSuccess)),
 });
 
 export const Landing = connect(mapStateToProps, mapDispatchToProps)(LandingComponent);

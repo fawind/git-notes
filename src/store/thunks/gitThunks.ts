@@ -8,9 +8,10 @@ export const Clone = (
   user: string | null,
   email: string | null,
   token: string | null,
+  corsProxy: string | null,
   onSuccess: () => void
 ) => async (dispatch: Dispatch, getState: () => AppState) => {
-  dispatch(SetCloneSettings({ url, user, email, token }));
+  dispatch(SetCloneSettings({ url, user, email, token, corsProxy }));
   await GitService.clone(getState().settings.repo);
   onSuccess();
 };
